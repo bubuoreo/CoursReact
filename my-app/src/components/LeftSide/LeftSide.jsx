@@ -3,13 +3,12 @@ import Robot from '../Robot/Robot';
 
 export const LeftSide = (props) => {
 
-    const robotsList = props.robots;
-
-    let display = robotsList.map(
+    let display = props.robots.robots.map(
         (robot) =>
-            <div key={robotsList.id} >
+            <div key={props.robots.robots.id}>
                 <Robot 
                     robot={robot}
+                    handleRobotClick={props.handleRobotClick}
                 />
             </div>
     );

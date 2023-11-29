@@ -6,8 +6,12 @@ export const Robot = (props) => {
 
     const idRobot = props.robot.id;
 
+    function handleRobotClick (e) {
+        props.handleRobotClick(idRobot)
+    }
+
 	return (
-		<div className="panel panel-default">
+		<div className="panel panel-default" onClick={handleRobotClick}>
             <div className="panel-heading">
                 <h3 className="panel-title">Robot {idRobot} description</h3>
             </div>
