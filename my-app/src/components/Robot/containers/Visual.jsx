@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import React, { Component } from 'react';
+export const Visual=(props) =>{
 
-export const Visual = (props) => {
-
-	let render_visual;
+    let render_visual;
       switch(props.type){
         case "img":
             render_visual=(
@@ -19,21 +18,11 @@ export const Visual = (props) => {
                 </object>
                 );
         break;
-        default:
-            render_visual=(
-                <img 
-                    className='imgCard' 
-                    src={props.src}  
-                />
-                );
-        break;
         }
 
     return(
         <div className="thumbnail">
                 {render_visual}
-        </div>
+        </div>   
     );
 }
-
-export default Visual

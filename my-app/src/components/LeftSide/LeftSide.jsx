@@ -1,23 +1,30 @@
-import { useState } from 'react';
-import Robot from '../Robot/Robot';
+import React, { Component } from 'react';
+import {Robot} from '../Robot/Robot';
+import { useSelector } from 'react-redux';
 
-export const LeftSide = (props) => {
+export const LeftSide =(props)=>{
 
-    let display = props.robots.robots.map(
-        (robot) =>
-            <div key={props.robots.robots.id}>
-                <Robot 
-                    robot={robot}
-                    handleRobotClick={props.handleRobotClick}
+    let robots = useSelector(state => state.robotR.robots)
+    
+    function getAllRobotRender(){
+        let array_render=[];
+        
+        for(var i=0;i<robots.length;i++){
+            
+            array_render.push(
+                <Robot
+                   key={i}
+                   robot={robots[i]}
                 />
+                );
+        }
+        return array_render;
+    }
+
+    const display_list = getAllRobotRender();
+    return (
+            <div>
+               {display_list}
             </div>
     );
-
-    return (
-        <div>
-            {display}
-        </div>
-    );
 }
-
-export default LeftSide

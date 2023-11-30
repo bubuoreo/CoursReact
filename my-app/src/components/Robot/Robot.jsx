@@ -1,19 +1,23 @@
-import { useState } from 'react';
-import Label from './containers/Label';
-import Visual from './containers/Visual';
+import React, { useState } from 'react';
+import {Label} from './containers/Label';
+import {Visual} from './containers/Visual';
+import { useDispatch } from 'react-redux';
+import { update_selected_robot } from '../../slices/robotSlice'
+import { update_selected_part } from '../../slices/partSlice';
 
-export const Robot = (props) => {
+export const Robot =(props) =>{
 
-    const idRobot = props.robot.id;
+    const dispatch = useDispatch();
 
-    function handleRobotClick (e) {
-        props.handleRobotClick(idRobot)
+    function handleOnRobotSelected(robot) {
+        console.log("Le robot sélectionné est : ",robot.id);
+        dispatch(update_selected_robot(robot))
     }
 
-	return (
-		<div className="panel panel-default" onClick={handleRobotClick}>
+    return (
+        <div className="panel panel-default" onClick={() => handleOnRobotSelected(props.robot)}>
             <div className="panel-heading">
-                <h3 className="panel-title">Robot {idRobot} description</h3>
+                <h3 className="panel-title">Robot {props.id} description</h3>
             </div>
             <div className="panel-body">
                 <Label 
@@ -22,11 +26,10 @@ export const Robot = (props) => {
                 />
                 <Visual 
                     type={props.robot.visual_type} 
-                    src={props.robot.visual_src}
+                    src={props.robot.visual_src} 
                 />
             </div>
         </div>
-	);
-}
+        );
 
-export default Robot
+}

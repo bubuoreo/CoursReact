@@ -1,23 +1,44 @@
-import { useState } from 'react';
+import React from 'react';
+import { Part } from '../Part/Part';
+import { useSelector } from "react-redux";
 
 export const MiddleSide = (props) => {
 
-    function getRender() {
-        if (props.parts == undefined) {
-            return ("MIDDLESIDE")
+    let current_robot = useSelector(state => state.robotR.current_robot);
+    let partLists = useSelector(state => state.partsR.parts);
+
+    let parts = current_robot.parts
+
+    function getPartObject(id) {
+        for (var i = 0; i < partLists.length; i++) {
+            if (partLists[i].id == id) {
+                return partLists[i];
+            }
         }
-        else {
-            return (props.parts)
-        }
+        return {};
     }
 
-    let display = getRender()
+    function getAllPartRender() {
+        let array_render = [];
+        if (parts == undefined)
+            return;
+        for (var i = 0; i < parts.length; i++) {
+            let obj = getPartObject(parts[i]);
+            array_render.push(
+                <Part
+                    key={i}
+                    part={obj}
+                />
+            );
+        }
+        return array_render;
+    }
+
+    const display_list = getAllPartRender();
 
     return (
         <div>
-            <h3>{display}</h3>
+            {display_list}
         </div>
     );
 }
-
-export default MiddleSide
