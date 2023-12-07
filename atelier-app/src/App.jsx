@@ -1,42 +1,35 @@
-import React, { useState } from 'react';
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
-import './lib/bootstrap-3.3.7-dist/css/bootstrap.min.css';
-import * as jsonSource from './sources/robots_parts.json';
+function App() {
+  const [count, setCount] = useState(0)
 
-import { LeftSide } from './components/LeftSide/LeftSide';
-import { MiddleSide } from './components/MiddleSide/MiddleSide';
-import { useDispatch } from 'react-redux';
-import { load_parts } from './slices/partSlice';
-import { load_robots } from './slices/robotSlice';
-import { RightSide } from './components/RightSide/rightSide';
-
-
-export const App = (props) => {
-    const [robots, setRobots] = useState(jsonSource.default);
-    const [selectedRobotId, setSelectedRobotId] = useState(0);
-    const [selectedParts, setSelectedParts] = useState([]);
-
-    const dispatch = useDispatch();
-
-    dispatch(load_robots(robots.robots))
-    dispatch(load_parts(robots.parts))
-
-    return (
-        <div className="container-fluid">
-            <div className="row">
-                <h1> Welcome to robot shop</h1>
-            </div>
-            <div className="row">
-                <div className="col-md-4 col-lg-4" >
-                    <LeftSide />
-                </div>
-                <div className="col-md-4 col-lg-4" >
-                    <MiddleSide />
-                </div>
-                <div className="col-md-4 col-lg-4" >
-                    <RightSide/>
-                </div>
-            </div>
-        </div>
-    );
+  return (
+    <>
+      <div>
+        <a href="https://vitejs.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.jsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
+  )
 }
+
+export default App
