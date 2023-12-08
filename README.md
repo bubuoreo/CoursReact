@@ -19,6 +19,11 @@ npm init -y
 npm install redux --save
 npm install react-redux --save
 npm install @reduxjs/toolkit --save
+npm install react-router-dom
+npm install tailwindcss
+npm install bootstrap
+npm install react-icons
+
 ```
 
 3. Lancer le serveur local **Vite** sur le port 5173
