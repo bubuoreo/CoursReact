@@ -18,16 +18,20 @@ import com.cpe.springboot.user.model.AuthDTO;
 import com.cpe.springboot.user.model.UserDTO;
 import com.cpe.springboot.user.model.UserModel;
 
+
 //ONLY FOR TEST NEED ALSO TO ALLOW CROOS ORIGIN ON WEB BROWSER SIDE
 @CrossOrigin
 @RestController
 public class UserRestController {
-
+	
+	
 	private final UserService userService;
+	
 	
 	public UserRestController(UserService userService) {
 		this.userService=userService;
 	}
+					
 	
 	@RequestMapping(method=RequestMethod.GET,value="/users")
 	private List<UserDTO> getAllUsers() {
@@ -50,6 +54,7 @@ public class UserRestController {
 
 	}
 	
+	
 	@RequestMapping(method=RequestMethod.POST,value="/user")
 	public UserDTO addUser(@RequestBody UserDTO user) {
 		return userService.addUser(user);
@@ -58,7 +63,7 @@ public class UserRestController {
 	@RequestMapping(method=RequestMethod.PUT,value="/user/{id}")
 	public UserDTO updateUser(@RequestBody UserDTO user,@PathVariable String id) {
 		user.setId(Integer.valueOf(id));
-		return userService.updateUser(user);
+		return userService.updateUser(user, false);
 	}
 	
 	@RequestMapping(method=RequestMethod.DELETE,value="/user/{id}")

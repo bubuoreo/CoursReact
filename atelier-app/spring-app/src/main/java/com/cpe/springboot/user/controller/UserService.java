@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cpe.springboot.card.Controller.CardModelService;
@@ -17,10 +18,14 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	private final CardModelService cardModelService;
+	@Autowired
+    private final UserRequester userRequester;
 
-	public UserService(UserRepository userRepository, CardModelService cardModelService) {
+	public UserService(UserRepository userRepository, 
+			CardModelService cardModelService, UserRequester userRequester) {
 		this.userRepository = userRepository;
 		this.cardModelService = cardModelService;
+		this.userRequester = userRequester;
 	}
 
 	public List<UserModel> getAllUsers() {
@@ -49,10 +54,17 @@ public class UserService {
 		return DTOMapper.fromUserModelToUserDTO(uBd);
 	}
 
-	public UserDTO updateUser(UserDTO user) {
+	public UserDTO updateUser(UserDTO user, boolean dequeued) {
+		UserDTO ret = new UserDTO();
 		UserModel u = fromUDtoToUModel(user);
-		UserModel uBd =userRepository.save(u);
-		return DTOMapper.fromUserModelToUserDTO(uBd);
+		if (dequeued) {
+			UserModel uBd =userRepository.save(u);
+			ret = DTOMapper.fromUserModelToUserDTO(uBd);
+		}
+		else {
+			userRequester.addUserModelToQueue(u);
+		}
+		return ret;
 	}
 
 	public UserDTO updateUser(UserModel user) {
