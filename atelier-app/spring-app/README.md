@@ -7,28 +7,40 @@
 - Tom DA ROLD
 - Quentin MELERO
 
-## Description du projet
+## Activités réalisées lors des séances
 
-Le projet à été initialisé avec la commande:
-```
-npm create vite@latest atelier-app -- --template react
-```
+1. Alexandre BURLOT
+    - Backend
+    - Tests Postman
+    - Projet git
+2. Adrien CORSETTI
+    - React / Frontend
+3. Tom DA ROLD
+    - Questions de l'atelier
+    - React / Frontend
+4. Quentin MELERO
+    - backend
+    - Tests postman
 
-## Innitialisation du projet individuellement en local
+## [Lien vers le Repo GIT](https://github.com/bubuoreo/CoursReact)
 
-1. Créer un projet avec `npm`
-```bash
-npm init -y
-```
+## Liste des éléments réalisés
 
-2. Installer tous les modules
-```bash
-npm install redux --save
-npm install react-redux --save
-npm install @reduxjs/toolkit --save
-```
+- Single page application codée en React.JS
+    - Page d'inscription
+    - Page de connection
+    - Homepage
+    - Buy Market
+    - Sell Market
+    - Tous les objets en React
+    - Routes
+- CSS
+- Backend en Springboot
+    - Changement de l'application monolithique
+    - Ajout de l'ESB ActiveMQ
+    - Mise en place d'un Requester pour ajouter des informations dans la queue ainsi qu'un Listener pour observer si des éléments sont en attente de traitement dans la queue.
 
-3. Lancer le serveur local **Vite** sur le port 5173
-```
-npm run dev
-```
+## Liste des éléments non-réalisés
+
+- Application indépendante de test du backend
+- Lien entre Backend et Frontend
