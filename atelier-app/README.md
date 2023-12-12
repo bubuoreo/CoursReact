@@ -34,7 +34,7 @@
     - Sell Market
     - Tous les objets en React
     - Routes
-- CSS
+
 - Backend en Springboot
     - Changement de l'application monolithique
     - Ajout de l'ESB ActiveMQ
@@ -44,3 +44,4 @@
 
 - Application indépendante de test du backend
 - Lien entre Backend et Frontend
+- CSS
