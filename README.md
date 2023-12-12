@@ -1,6 +1,6 @@
 # CoursReact
 
-## Description du projet
+## Mise en place du projet
 
 Le projet à été initialisé avec la commande:
 ```
