@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaShoppingCart, FaDollarSign, FaPlay } from 'react-icons/fa'; // Install react-icons if not already
+import { useNavigate } from 'react-router-dom';
 
 const icons = {
   buy: FaShoppingCart,
@@ -10,9 +11,15 @@ const icons = {
 const ActionButton = ({ action, label }) => {
   const IconComponent = icons[action];
 
+  const navigate = useNavigate();
+
+  const handleAction = () => {
+    // Directly navigate to the home page without credentials check
+    navigate('/'+action);}
+
   return (
-    <button className="flex items-center justify-center px-4 py-2 border rounded shadow hover:bg-gray-100">
-      {IconComponent ? <IconComponent className="mr-2" /> : null}
+    <button onClick={handleAction} className="px-4 py-4 border rounded shadow m-auto justify-center">
+      {IconComponent ? <IconComponent size={30} /> : null}
       {label}
     </button>
   );

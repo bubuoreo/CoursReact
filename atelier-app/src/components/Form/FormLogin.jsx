@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
-const LoginForm = ({ onConnect, onCancel }) => {
+import { useNavigate } from 'react-router-dom';
+
+const FormLogin = ({ onConnect, onCancel }) => {
   const [surname, setSurname] = useState('');
   const [password, setPassword] = useState('');
 
@@ -8,6 +10,12 @@ const LoginForm = ({ onConnect, onCancel }) => {
     event.preventDefault();
     onConnect(surname, password);
   };
+
+  const navigate = useNavigate();
+
+  const handleSignIn = () => {
+    // Directly navigate to the home page without credentials check
+    navigate('/home');}
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -40,11 +48,11 @@ const LoginForm = ({ onConnect, onCancel }) => {
             />
           </div>
           <div className="flex items-center justify-between">
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+            <button onClick={handleSignIn} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
               Connect
             </button>
             <button className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" onClick={onCancel}>
-              Cancel
+              Sign In
             </button>
           </div>
         </form>
@@ -53,4 +61,5 @@ const LoginForm = ({ onConnect, onCancel }) => {
   );
 };
 
-export default LoginForm;
+
+export default FormLogin;
