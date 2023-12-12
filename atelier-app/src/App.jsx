@@ -1,26 +1,38 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import HomePage from './HomePage';
-import BuyPage from './BuyPage';
-import SellPage from './SellPage';
-import RegistrationPage from './RegistrationPage';
+import React, { useState } from 'react';
 
-const App = () => {
+import 'tailwindcss/tailwind.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+import cardImage from './assets/card.png';
+import LoginPage from './pages/LoginPage.jsx'
+import HomePage from './pages/HomePage.jsx'
+import RegistrationPage from './pages/RegistrationPage.jsx'
+import BuyPage from './pages/BuyPage.jsx'
+import SellPage from './pages/SellPage.jsx'
+import { Header } from './components/Header/Header.jsx';
+import ActionButton from './components/ActionButton/ActionButton.jsx';
+import CardVisual from './components/Card/containers/CardVisual.jsx';
+import CardTable from './components/CardTable/CardTable.jsx';
+
+
+export const App = () => {
+
+  {/* const cardData = [
+    ['Card 1', 'Description 1', 'Family 1', 'Affinity 1', 'Energy 1', 'HP 1', '50$'],
+    ['Card 2', 'Description 2', 'Family 2', 'Affinity 2', 'Energy 2', 'HP 2', '60$'],
+    // ... more card data
+  ];*/}
+
   return (
     <Router>
-      <Switch>
-        <Route path="/login" component={LoginPage} />
-        <Route path="/register" component={RegistrationPage} />
-        <Route path="/home" component={HomePage} />
-        <Route path="/buy" component={BuyPage} />
-        <Route path="/sell" component={SellPage} />
-        <Route path="/" exact component={LoginPage} />
-        {/* Redirect to login page if no match found */}
-        <Route render={() => <Redirect to="/" />} />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/buy" element={<BuyPage />} />
+        <Route path="/sell" element={<SellPage />} />
+      </Routes>
     </Router>
   );
-}
-
-export default App;
+};
