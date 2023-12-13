@@ -6,20 +6,44 @@
 </head>
 
 <body>
+    <div>
+        <p id="idUser"></p>
+    </div>
     <ul id="messages"></ul>
     <form id="form" action="">
+        <p>Destinataire : </p>
+        <input id="destinataire" autocomplete="off" />
+        <p>Message : </p>
         <input id="input" autocomplete="off" /><button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="./js/index.js"></script>
     <script>
-        var socket = io();
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        // Usage example
+        var randomNumber = getRandomInt(1, 10);
+
+
+
+        var socket = io({ query: { id: randomNumber } });
         var form = document.getElementById('form');
         var input = document.getElementById('input');
+        var dest = document.getElementById('destinataire');
+        var userParagraph = document.getElementById('idUser');
+        userParagraph.innerHTML = `User : ${randomNumber}`
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-
+            
             if (input.value) {
-                socket.emit('chat message', input.value);
+                const body = {"msg": input.value};
+                if (dest.value) {
+                    body["dest"] = dest.value;
+                }
+                socket.emit('chat message', JSON.stringify(body));
                 input.value = '';
 
             }
