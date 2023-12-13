@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import CardItem from '../components/Card/containers/CardItem';
 
 // Dummy data for the cards
 const cardsData = [
@@ -7,14 +8,8 @@ const cardsData = [
   // Add more card objects here
 ];
 
-const CardItem = ({ card, onBuy }) => (
-  <div className="card-item">
-    <h3>{card.name}</h3>
-    <p>{card.description}</p>
-    <p>{card.price}</p>
-    <button onClick={() => onBuy(card)}>Buy</button>
-  </div>
-);
+
+
 
 const BuyPage = () => {
   const [cards, setCards] = useState(cardsData);

@@ -31,9 +31,12 @@ const FormLogin = ({ onConnect, onCancel }) => {
       navigate('/home');
 
     }
-    
 
     }
+  
+  const handleRegisterClick = () => {
+    navigate('/register');
+  }
 
 
   return (
@@ -70,8 +73,8 @@ const FormLogin = ({ onConnect, onCancel }) => {
             <button onClick={handleSubmit} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
               Connect
             </button>
-            <button className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" onClick={onCancel}>
-              Sign In
+            <button className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" onClick={handleRegisterClick}>
+              Register
             </button>
           </div>
         </form>
