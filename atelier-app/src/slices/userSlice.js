@@ -4,13 +4,25 @@ export const userSlice = createSlice({
   name: 'User',
   // Define initial state of the reducer/slice
   initialState: {
-    user:{},
-    submitted_user:{},
+    user: {
+      id: 0,
+      login: '',
+      pwd: '',
+      account: 0,
+      lastName: '',
+      email: '',
+      surName: '',
+      cardLisdt: [],
+
+      // ... autres propriétés
+    },
   },
   // Define the reducers 
   reducers: {
     update_user_action: (state, action) => {
-        state.user = action.payload.user
+        console.log(action)
+        state.user = action.payload
+
     },
     submit_user_action: (state, action) => {
         console.log("User to Submit");

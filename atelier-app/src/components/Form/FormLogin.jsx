@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-
+import { useDispatch } from 'react-redux';
+import { update_user_action } from '../../slices/userSlice';
 import { useNavigate } from 'react-router-dom';
-
+       
 
 
 const FormLogin = ({ onConnect, onCancel }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -27,10 +28,21 @@ const FormLogin = ({ onConnect, onCancel }) => {
     }
     else{
       const data  = await response.json();
-      console.log(data);
       navigate('/home');
+      console.log(response)
+      const userinfo =  await fetch('http://localhost:8083/user/'+String(data), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        });
+        const userinfo1  = await userinfo.json();
+        console.log(userinfo1)
 
+        dispatch(update_user_action(userinfo1));
+        
     }
+
 
     }
   
