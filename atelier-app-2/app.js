@@ -39,7 +39,8 @@ app.use(express.static(CONFIG.www));
 app.use(CONFIG.apiPath, PingRouter);
 
 app.get('/api/users', async (req, res) => {
-    const result = await SpringbootService.getAllUsers()
+    console.log('On a compris que tu voulais les users du serveur Springboot');
+    SpringbootService.getAllUsers(req, res)
 });
 
 server.listen(port, () => {
