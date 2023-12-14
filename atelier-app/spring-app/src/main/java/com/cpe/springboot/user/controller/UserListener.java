@@ -20,10 +20,18 @@ public class UserListener {
 		this.userService = userService;
 	}
 	
-    @JmsListener(destination = "fr.cpe.spring-app.user")
-    public void receiveUserModelFromQueue(UserModel user) {
+    @JmsListener(destination = "fr.cpe.spring-app.updateUser")
+    public void receiveUserModelFromUpdateQueue(UserModel user) {
     	System.out.println(user.getLastName());
     	
     	userService.updateUser(new UserDTO(user), true);
+    }
+    
+    
+    @JmsListener(destination = "fr.cpe.spring-app.addUser")
+    public void receiveUserModelFromAddQueue(UserModel user) {
+    	System.out.println(user.getLastName());
+    	
+    	userService.addUser(new UserDTO(user), true);
     }
 }

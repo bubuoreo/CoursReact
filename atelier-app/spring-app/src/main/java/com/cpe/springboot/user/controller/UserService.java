@@ -42,16 +42,22 @@ public class UserService {
 		return userRepository.findById(id);
 	}
 
-	public UserDTO addUser(UserDTO user) {
+	public UserDTO addUser(UserDTO user, boolean dequeued) {
+		UserDTO ret = new UserDTO();
 		UserModel u = fromUDtoToUModel(user);
-		// needed to avoid detached entity passed to persist error
-		userRepository.save(u);
-		List<CardModel> cardList = cardModelService.getRandCard(5);
-		for (CardModel card : cardList) {
-			u.addCard(card);
+		if (dequeued) {
+			UserModel u_saved = userRepository.save(u);
+			List<CardModel> cardList = cardModelService.getRandCard(5);
+			for (CardModel card : cardList) {
+				u_saved.addCard(card);
+			}
+			UserModel uBd = userRepository.save(u_saved);
+			ret = DTOMapper.fromUserModelToUserDTO(uBd);
 		}
-		UserModel uBd = userRepository.save(u);
-		return DTOMapper.fromUserModelToUserDTO(uBd);
+		else {
+			userRequester.addUserModelToAddQueue(u);
+		}
+		return ret;
 	}
 
 	public UserDTO updateUser(UserDTO user, boolean dequeued) {
@@ -62,7 +68,7 @@ public class UserService {
 			ret = DTOMapper.fromUserModelToUserDTO(uBd);
 		}
 		else {
-			userRequester.addUserModelToQueue(u);
+			userRequester.addUserModelToUpdateQueue(u);
 		}
 		return ret;
 	}

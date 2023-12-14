@@ -12,10 +12,16 @@ public class UserRequester {
 	@Autowired
     JmsTemplate jmsTemplate;
 	
-	private static final String QUEUE_KEY = "fr.cpe.spring-app.user";
+	private static final String QUEUE_KEY_UPDATE = "fr.cpe.spring-app.updateUser";
+	private static final String QUEUE_KEY_ADD = "fr.cpe.spring-app.addUser";
 
-    public void addUserModelToQueue(UserModel user) {
+    public void addUserModelToUpdateQueue(UserModel user) {
         System.out.println("[UserRequester] SEND UserModel User=["+user+"]");
-        jmsTemplate.convertAndSend(QUEUE_KEY,user);
+        jmsTemplate.convertAndSend(QUEUE_KEY_UPDATE,user);
+    }
+    
+    public void addUserModelToAddQueue(UserModel user) {
+        System.out.println("[UserRequester] SEND UserModel User=["+user+"]");
+        jmsTemplate.convertAndSend(QUEUE_KEY_ADD,user);
     }
 }

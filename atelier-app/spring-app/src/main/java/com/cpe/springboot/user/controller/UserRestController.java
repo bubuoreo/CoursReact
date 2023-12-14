@@ -57,7 +57,7 @@ public class UserRestController {
 	
 	@RequestMapping(method=RequestMethod.POST,value="/user")
 	public UserDTO addUser(@RequestBody UserDTO user) {
-		return userService.addUser(user);
+		return userService.addUser(user, false);
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT,value="/user/{id}")
