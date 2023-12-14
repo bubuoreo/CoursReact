@@ -37,9 +37,9 @@
         userParagraph.innerHTML = `User : ${randomNumber}`
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             if (input.value) {
-                const body = {"msg": input.value};
+                const body = { "msg": input.value };
                 if (dest.value) {
                     body["dest"] = dest.value;
                 }

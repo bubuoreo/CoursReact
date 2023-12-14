@@ -26,4 +26,4 @@ class UserManager {
     }
 }
 
-module.exports = new UserManager()
+module.exports = UserManager;

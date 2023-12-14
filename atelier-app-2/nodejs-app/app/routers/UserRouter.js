@@ -1,5 +1,5 @@
 const PingRouter = require('./PingRouter.js')
-const UserController = require('../controllers/MessageController.js')
+const GameController = require('../controllers/GameController.js')
 
 const express = require('express');
 
@@ -10,10 +10,10 @@ const UserRouter = express.Router();
 UserRouter.use(BASE_PATH, PingRouter);
 
 UserRouter.route(BASE_PATH)
-    .get(UserController.getUsers)
-    .post(UserController.createUser);
+    .get(GameController.getUsers)
+    .post(GameController.createUser);
 
 UserRouter.route(`${BASE_PATH}/:userId`)
-    .get(UserController.getUser);
+    .get(GameController.getUser);
 
 module.exports = UserRouter;

@@ -1,7 +1,4 @@
 const fetch = require('node-fetch');
-const CONFIG = require('../../../config.json')
-
-global.CONFIG = CONFIG;
 
 class SpringbootService {
 
@@ -25,4 +22,4 @@ class SpringbootService {
     }
 }
 
-module.exports = new SpringbootService(CONFIG.springbootApp);
+module.exports = SpringbootService;
