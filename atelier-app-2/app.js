@@ -4,8 +4,11 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 
-// Importe les services et controllesr dont on a besoin
-const MessageController = require("./nodejs-app/app/controllers/MessageController.js")
+// Importe les services et controllers dont on a besoin
+const MessageController = require("./nodejs-app/app/controllers/MessageController.js");
+// const UserRouter = require('./nodejs-app/app/routers/UserRouter.js');
+const PingRouter = require('./nodejs-app/app/routers/PingRouter.js');
+const SpringbootService = require('./nodejs-app/app/services/SpringbootService.js');
 
 
 global.CONFIG = CONFIG;
@@ -32,8 +35,11 @@ app.set("port", port);
 
 app.use(express.static(CONFIG.www));
 
-app.post('/msg', (req, res) => {
-    console.log("coucou");
+// app.use(CONFIG.apiPath, UserRouter);
+app.use(CONFIG.apiPath, PingRouter);
+
+app.get('/api/users', async (req, res) => {
+    const result = await SpringbootService.getAllUsers()
 });
 
 server.listen(port, () => {

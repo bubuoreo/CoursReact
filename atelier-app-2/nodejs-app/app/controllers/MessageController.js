@@ -9,12 +9,16 @@ class MessageController {
         UserManager.getConnectedUsers();
         // Déléguer la création de cette écoute a un autre service
         socket.on('chat message', (msg) => {
-            // io.emit('chat message', msg);
             var parsedMsg = JSON.parse(msg);
-            var idDestUser = parsedMsg.dest
-            var displayMsg = `User${idUser} -> User${idDestUser}: "${parsedMsg.msg}"`
-            UserManager.getSocket({id: idDestUser}).emit('chat message', displayMsg)
-            UserManager.getSocket({id: idUser}).emit('chat message', displayMsg)
+            if (parsedMsg.hasOwnProperty('dest')) {
+                var idDestUser = parsedMsg.dest;
+                var displayMsg = `User${idUser} -> User${idDestUser}: "${parsedMsg.msg}"`;
+                UserManager.getSocket({id: idDestUser}).emit('chat message', displayMsg);
+                UserManager.getSocket({id: idUser}).emit('chat message', displayMsg);
+            } else {
+                var displayMsg = `User${idUser} : "${parsedMsg.msg}"`;
+                io.emit('chat message', displayMsg);
+            }
         });
     }
 
