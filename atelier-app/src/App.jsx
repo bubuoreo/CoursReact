@@ -11,6 +11,7 @@ import HomePage from './pages/HomePage.jsx'
 import RegistrationPage from './pages/RegistrationPage.jsx'
 import BuyPage from './pages/BuyPage.jsx'
 import SellPage from './pages/SellPage.jsx'
+import CardSelectionPage from './pages/CardSelectionPage.jsx'
 import { Header } from './components/Header/Header.jsx';
 import ActionButton from './components/ActionButton/ActionButton.jsx';
 import CardVisual from './components/Card/containers/CardVisual.jsx';
@@ -33,6 +34,7 @@ export const App = () => {
         <Route path="/home" element={<HomePage />} />
         <Route path="/buy" element={<BuyPage />} />
         <Route path="/sell" element={<SellPage />} />
+        <Route path="/play" element={<CardSelectionPage />} />
       </Routes>
     </Router>
   );
