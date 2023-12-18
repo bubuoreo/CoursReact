@@ -1,37 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import CardItem from '../components/Card/containers/CardItem';
-
-// Dummy data for the cards
-const cardsData = [
-  { id: 1, name: 'Card 1', description: 'Description 1', price: '50$' },
-  { id: 2, name: 'Card 2', description: 'Description 2', price: '60$' },
-  // Add more card objects here
-];
-
-
-
-
+import { Header } from '../components/Header/Header.jsx';
+import { useSelector } from 'react-redux';
 const BuyPage = () => {
-  const [cards, setCards] = useState(cardsData);
-
-  useEffect(() => {
-    // Here you would fetch the cards from your backend instead of using dummy data
-    // fetch('/api/cards')
-    //   .then(response => response.json())
-    //   .then(data => setCards(data));
-  }, []);
-
-  const handleBuy = (card) => {
-    // Implement your buy logic here, for example opening a modal or making an API call
-    console.log('Buying', card);
+  const [cardsWithUserId14, setCardsWithUserId14] = useState([]);
+  let user = useSelector(state => state.userReducer.user);
+  const fetchCards = async () => {
+    try {
+      const response = await fetch('/cards_to_sell');
+      if (!response.ok) {
+        throw new Error('Failed to fetch');
+      }
+      const cardsData = await response.json();
+      const cardsFiltered = Object.values(cardsData);
+      console.log(cardsFiltered)
+      setCardsWithUserId14(cardsFiltered);
+    } catch (error) {
+      console.error('Error fetching cards', error);
+    }
   };
 
+  useEffect(() => {
+    fetchCards();
+    // Note: If you have other dependencies for the useEffect, include them in the dependency array
+  }, []); // The empty dependency array ensures that the effect runs once after the initial render
+  const postData = async (cardId) => {
+    const url = '/buy';
+    const data = {
+      "userId": user.id + 1,
+      "id": cardId
+    };
+    console.log(data);
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP! Statut : ${response.status}`);
+      }
+      const result = await response.json();
+      console.log('Réponse du serveur :', result);
+    } catch (error) {
+      console.error('Erreur lors de la requête :', error.message);
+    }
+  };
+
+  const handleBuy = (cardId) => {
+    postData(cardId);
+  };
+
+  
+  
+  
   return (
     <div className="buy-page">
+      <Header />
       <h1>Market</h1>
       <div className="card-list">
-        {cards.map((card) => (
-          <CardItem key={card.id} card={card} onBuy={handleBuy} />
+        {cardsWithUserId14.map((card) => (
+          <CardItem key={card.id} card={card} />
         ))}
       </div>
     </div>
@@ -39,3 +71,4 @@ const BuyPage = () => {
 };
 
 export default BuyPage;
+

@@ -13,7 +13,7 @@ const FormLogin = ({ onConnect, onCancel }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const response = await fetch('http://localhost:8083/auth', {
+    const response = await fetch('/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,17 +28,18 @@ const FormLogin = ({ onConnect, onCancel }) => {
     }
     else{
       const data  = await response.json();
+
       navigate('/home');
-      console.log(response)
-      const userinfo =  await fetch('http://localhost:8083/user/'+String(data), {
+
+    
+      const userinfo =  await fetch('/user/'+String(data), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
         });
         const userinfo1  = await userinfo.json();
-        console.log(userinfo1)
-
+        
         dispatch(update_user_action(userinfo1));
         
     }
