@@ -21,19 +21,16 @@ const io = socketIo(server);
 const springbootService = new SpringbootServiceClass(CONFIG.springbootApp);
 const gameController = new GameControllerClass();
 
-const idWaitingUsers = []
-const gameRooms = {}
-
 io.on('connection', (socket) => {
     const idUser = socket.handshake.query.id;
     console.log(`L'id du user est : ${idUser}`);
     console.log('Un utilisateur s\'est connecté');
-    GameController.init({io, socket, idUser});
+    gameController.init({io, socket, idUser});
     
 
     socket.on('disconnect', () => {
         console.log('Un utilisateur s\'est déconnecté');
-        GameController.removeUser(idUser);
+        gameController.removeUser(idUser);
     });
 });
 

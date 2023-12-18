@@ -13,7 +13,6 @@ class GameController {
         // Appeler le UserManager pour sauvegarder la socket de l'utilisateur
         this.userManager.addUser({id: idUser, socket: socket});
         this.userManager.getConnectedUsers();
-        this.gameService.init({id: idUser})
         // Déléguer la création de cette écoute a un autre service
         socket.on('chat message', (msg) => {
             var parsedMsg = JSON.parse(msg);
@@ -27,10 +26,13 @@ class GameController {
                 io.emit('chat message', displayMsg);
             }
         });
+        socket.on('play', () => {
+            this.gameService.init({id: idUser});
+        });
     }
 
     removeUser(idUser) {
-        UserManager.removeUser(idUser);
+        this.userManager.removeUser(idUser);
     }
 }
 

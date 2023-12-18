@@ -15,6 +15,7 @@
         <input id="destinataire" autocomplete="off" />
         <p>Message : </p>
         <input id="input" autocomplete="off" /><button>Send</button>
+        <button id="playButton" onclick="testRoom()">Jouer</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/index.js"></script>
@@ -25,12 +26,13 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
         // Usage example
-        var randomNumber = getRandomInt(1, 10);
+        var randomNumber = getRandomInt(1, 1000);
 
 
 
         var socket = io({ query: { id: randomNumber } });
         var form = document.getElementById('form');
+        var playButton = document.getElementById('playButton');
         var input = document.getElementById('input');
         var dest = document.getElementById('destinataire');
         var userParagraph = document.getElementById('idUser');
@@ -47,6 +49,9 @@
                 input.value = '';
 
             }
+        });
+        playButton.addEventListener('click', function (e) {
+            socket.emit('play');
         });
         socket.on('chat message', function (msg) {
             var item = document.createElement('li');
