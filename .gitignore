@@ -19,3 +19,6 @@ Thumbs.db
 
 .vscode/
 .idea/
+
+**/.settings/
+atelier-app/spring-app/.project

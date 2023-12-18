@@ -7,7 +7,7 @@ const HomePage = () => {
     return (
         <div >
             <Header />
-            <div className='home d-flex flex-fill align-items-center m-auto'>
+            <div className='d-flex align-items-center justify-content-center mt-5'>
                 <ActionButton action="buy" label="Buy" />
                 <ActionButton action="sell" label="Sell" />
                 <ActionButton action="play" label="Play" />
