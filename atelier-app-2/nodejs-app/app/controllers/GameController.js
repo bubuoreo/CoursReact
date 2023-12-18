@@ -26,8 +26,9 @@ class GameController {
                 io.emit('chat message', displayMsg);
             }
         });
-        socket.on('play', () => {
-            this.gameService.init({id: idUser});
+        socket.on('play', (cardsJson) => {
+            console.log(cardsJson);
+            this.gameService.init({id: idUser, cards: cardsJson});
         });
     }
 

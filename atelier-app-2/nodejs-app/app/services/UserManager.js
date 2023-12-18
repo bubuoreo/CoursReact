@@ -2,6 +2,7 @@ class UserManager {
 
     constructor() {
         this.socketsMap = new Map();
+        this.userPlayingCards = {};
     }
 
     addUser({id, socket}) {
