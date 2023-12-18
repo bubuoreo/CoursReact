@@ -60,6 +60,90 @@ class GameService {
     getRoom({ id }) {
 
     }
+
+    attaque({userId, cardId, opponentCardId}){
+        console.log("On va attaquer");
+        const { userId, cardId, opponentCardId } = data;
+        for (const room of gameRooms) {
+            console.log(room);
+            user1 = room.find(user => user.userId === userId);
+            if (user1) {
+                user2 = room.find(user => user.userId !== userId);
+                GR = room
+                if (user1.canAttack) {
+                  if (user1.GamePoint > 0) {
+                    cardAttack = user1.cards.find(card => card.cardid === cardId);
+                    cardDefense = user2.cards.find(card => card.cardid === opponentCardId);
+                    if (cardAttack && cardDefense && cardAttack.defense > 0 && cardDefense.defense > 0) {
+                      cardDefense.defense = cardDefense.defense - cardAttack.attaque;
+                      if (cardDefense.defense < 0) {
+                        cardDefense.defense = 0;
+                      }
+                      const indexCarte = user2.cards.findIndex(card => card.cardid === opponentCardId);
+                      if (indexCarte !== -1) {
+                        user2.cards[indexCarte] = cardDefense;
+                        user1.GamePoint = user1.GamePoint - 1;
+                        const NGR = [user1, user2];
+                        gameRooms.pop(GR);
+                        if (CalculEndGame(user2)) {
+                          const userDataForPlayer1 = { looser: user2, winner: user1 };
+                          const userDataForPlayer2 = { winner: user1, looser: user2 };
+                          io.to(user1.socketId).emit('resultat_attaque', userDataForPlayer1);
+                          io.to(user2.socketId).emit('resultat_attaque', userDataForPlayer2);
+                          delete usersInRoom[user1.userId];
+                          delete usersInRoom[user2.userId];
+                          modifyMoney(user1, 100);
+                          modifyMoney(user2, -100);
+                        } else {
+                          gameRooms.push(NGR);
+                          const userDataForPlayer1 = { opponent: user2, myDetails: user1 };
+                          const userDataForPlayer2 = { opponent: user1, myDetails: user2 };
+                          io.to(user1.socketId).emit('resultat_attaque', userDataForPlayer1);
+                          io.to(user2.socketId).emit('resultat_attaque', userDataForPlayer2);
+                        }
+                      } else {
+                        io.to(user1.socketId).emit('erreur_attaque', 'attack failed, card unknown');
+                      }
+                    } else {
+                      io.to(user1.socketId).emit('erreur_attaque', 'wrong card');
+                    }
+                  } else {
+                    io.to(user1.socketId).emit('erreur_attaque', 'No GamePoint. you can just end your turn');
+                  }
+                } else {
+                  io.to(user1.socketId).emit('erreur_attaque', 'You are not allowed to attack.');
+                }
+                break;
+              }
+            }
+    };
+
+    endTurn({data}){
+        console.log(data);
+        const {userId} = data;
+        for (const room of gameRooms) {
+          user1 = room.find(user => user.userId === userId);
+          if (user1) {
+            if(user1.canAttack){
+              user2 = room.find(user => user.userId !== userId);
+              user1.canAttack=false;
+              user2.canAttack=true;
+              user2.GamePoint=user2.GamePoint+1;
+              GR = room
+              const NGR = [user1, user2];
+              gameRooms.pop(GR);
+              gameRooms.push(NGR);
+              const userDataForPlayer1 = { opponent: user2, myDetails: user1 };
+              const userDataForPlayer2 = { opponent: user1, myDetails: user2 };
+              io.to(user1.socketId).emit('resultat_attaque', userDataForPlayer1);
+              io.to(user2.socketId).emit('resultat_attaque', userDataForPlayer2);
+            }else{
+              io.to(user1.socketId).emit('erreur_attaque', 'not your turn' );
+            }
+          }
+        }
+      };
+    
 }
 
 function getRandomInt(min, max) {

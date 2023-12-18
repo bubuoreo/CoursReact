@@ -30,11 +30,26 @@ class GameController {
             console.log(cardsJson);
             this.gameService.init({id: idUser, cards: cardsJson});
         });
+
+        socket.on('attaque', (cardId, opponentcardId) => {
+            console.log("On attaque")
+            this.gameService.attaque({id: idUser, cardId: cardId, opponentCardId: opponentcardId});
+        });
+
+        socket.on('endturn', (data) => {
+            console.log("On change de joueur")
+            this.gameService.endTurn();
+        });
+        
     }
 
     removeUser(idUser) {
         this.userManager.removeUser(idUser);
-    }
+    };
+
+    CalculEndGame(user) {
+        return user.cards.every(card => card.defense <= 0);
+      }
 }
 
 module.exports = GameController;
