@@ -23,8 +23,8 @@ const SellPage = () => {
     const postData = async () => {
       const url = '/sell';
       const data = {
-        "userId": user.id + 1,
-        "id": cardId
+        "user_id": user.id + 1,
+        "card_id": cardId
       }
       console.log(data)  
       try {
