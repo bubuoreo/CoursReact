@@ -4,30 +4,40 @@ class GameService {
         this.userManager = userManager;
         this.gameRooms = {};
         this.waitingUsersId = {};
+        this.moneyPrice = 20;
     }
 
-    init({ id, cards }) {
-        this.addUserToWaitingList({ id: id, cards: cards });
+    init({ id, cards, money }) {
+        this.addUserToWaitingList({ id: id, cards: cards, wallet: money });
         const userIdWaitingList = Object.keys(this.waitingUsersId);
         console.log(`GameService : taille waiting list ${userIdWaitingList.length}`);
         if (userIdWaitingList.length >= 2) {
             const Player1 = this.waitingUsersId[userIdWaitingList.shift()];
-            delete this.waitingUsersId[Player1];
+            delete this.waitingUsersId[Player1.id];
+
             const Player2 = this.waitingUsersId[userIdWaitingList.shift()];
-            delete this.waitingUsersId[Player2];
+            delete this.waitingUsersId[Player2.id];
+
             const roomKey = this.createRoom({ infoPlayer1: Player1, infoPlayer2: Player2 });
             console.log(`GameService: Création de la room ${roomKey} avec les players ${Player1.id} et ${Player2.id}`);
             console.log(this.gameRooms[roomKey]);
+
+            const infoPlayer1 = { "myDetails": this.gameRooms[roomKey].player1, "opponentDetails": this.gameRooms[roomKey].player2 };
+            const infoPlayer2 = { "myDetails": this.gameRooms[roomKey].player2, "opponentDetails": this.gameRooms[roomKey].player1 };
+
+            // Faire remonter au controller les infos des deux joueurs
+            return { infoPlayer1, infoPlayer2 };
         }
         else {
             console.log(`Pas assez de joueurs disponibles`);
         }
     }
 
-    addUserToWaitingList({ id, cards }) {
+    addUserToWaitingList({ id, cards, wallet }) {
         const playerInfo = {
             "id": id,
-            "cards": cards
+            "cards": JSON.parse(cards),
+            "wallet": wallet
         }
         this.waitingUsersId[id] = playerInfo;
         console.log(this.waitingUsersId);
@@ -40,14 +50,16 @@ class GameService {
         const roomInfo = {
             "player1": {
                 "id": infoPlayer1.id,
-                "socket": socketPlayer1,
+                "socketId": socketPlayer1.id,
+                "wallet": infoPlayer1.wallet,
                 "gamePoints": 2,
                 "canAttack": true,
                 "cards": infoPlayer1.cards
             },
             "player2": {
                 "id": infoPlayer2.id,
-                "socket": socketPlayer2,
+                "socketId": socketPlayer2.id,
+                "wallet": infoPlayer2.wallet,
                 "gamePoints": 2,
                 "canAttack": false,
                 "cards": infoPlayer2.cards
@@ -57,93 +69,96 @@ class GameService {
         return roomKey;
     }
 
-    getRoom({ id }) {
-
+    getRoomDetails({ userId }) {
+        for (const room of Object.keys(this.gameRooms)) {
+            const playersInRoom = Object.values(this.gameRooms[room]);
+            const player1 = playersInRoom.find(player => player.id === userId);
+            if (player1) {
+                const player2 = playersInRoom.find(player => player.id !== userId);
+                return [ room, player1, player2 ];
+            }
+        }
     }
 
-    attaque({userId, cardId, opponentCardId}){
+    attaque({ userId, cardId, opponentCardId }) {
         console.log("On va attaquer");
-        const { userId, cardId, opponentCardId } = data;
-        for (const room of gameRooms) {
-            console.log(room);
-            user1 = room.find(user => user.userId === userId);
-            if (user1) {
-                user2 = room.find(user => user.userId !== userId);
-                GR = room
-                if (user1.canAttack) {
-                  if (user1.GamePoint > 0) {
-                    cardAttack = user1.cards.find(card => card.cardid === cardId);
-                    cardDefense = user2.cards.find(card => card.cardid === opponentCardId);
-                    if (cardAttack && cardDefense && cardAttack.defense > 0 && cardDefense.defense > 0) {
-                      cardDefense.defense = cardDefense.defense - cardAttack.attaque;
-                      if (cardDefense.defense < 0) {
-                        cardDefense.defense = 0;
-                      }
-                      const indexCarte = user2.cards.findIndex(card => card.cardid === opponentCardId);
-                      if (indexCarte !== -1) {
-                        user2.cards[indexCarte] = cardDefense;
-                        user1.GamePoint = user1.GamePoint - 1;
-                        const NGR = [user1, user2];
-                        gameRooms.pop(GR);
-                        if (CalculEndGame(user2)) {
-                          const userDataForPlayer1 = { looser: user2, winner: user1 };
-                          const userDataForPlayer2 = { winner: user1, looser: user2 };
-                          io.to(user1.socketId).emit('resultat_attaque', userDataForPlayer1);
-                          io.to(user2.socketId).emit('resultat_attaque', userDataForPlayer2);
-                          delete usersInRoom[user1.userId];
-                          delete usersInRoom[user2.userId];
-                          modifyMoney(user1, 100);
-                          modifyMoney(user2, -100);
-                        } else {
-                          gameRooms.push(NGR);
-                          const userDataForPlayer1 = { opponent: user2, myDetails: user1 };
-                          const userDataForPlayer2 = { opponent: user1, myDetails: user2 };
-                          io.to(user1.socketId).emit('resultat_attaque', userDataForPlayer1);
-                          io.to(user2.socketId).emit('resultat_attaque', userDataForPlayer2);
-                        }
-                      } else {
-                        io.to(user1.socketId).emit('erreur_attaque', 'attack failed, card unknown');
-                      }
-                    } else {
-                      io.to(user1.socketId).emit('erreur_attaque', 'wrong card');
+        const [ roomId, attackPlayer, defensePlayer ] = this.getRoomDetails({ userId: userId });
+        if (attackPlayer.canAttack) {
+            if (attackPlayer.gamePoints > 0) {
+                const attackCards = Object.keys(attackPlayer.cards);
+                const cardAttack = attackPlayer.cards[cardId];
+                const cardDefense = defensePlayer.cards[opponentCardId];
+                console.log(attackCards);
+                console.log(cardDefense);
+                if (cardAttack && cardDefense && cardAttack.hp > 0 && cardDefense.hp > 0) {
+                    cardDefense.hp = cardDefense.hp - (cardAttack.att - cardDefense.def);
+                    // TODO: Ajout CC, esquive, etc...
+                    if (cardDefense.hp < 0) {
+                        cardDefense.hp = 0;
                     }
-                  } else {
-                    io.to(user1.socketId).emit('erreur_attaque', 'No GamePoint. you can just end your turn');
-                  }
-                } else {
-                  io.to(user1.socketId).emit('erreur_attaque', 'You are not allowed to attack.');
-                }
-                break;
-              }
-            }
-    };
+                    
+                    // MAJ dans les cartes du défenseur des hp de la carte visée
+                    defensePlayer.cards[opponentCardId].hp = cardDefense.hp;
+                    console.log(defensePlayer.cards[opponentCardId]);
+                    // Vérifier si l'attaque qui vient d'être lancée signe la fin du jeu
+                    if (this.isEndGame({player: defensePlayer})) {
 
-    endTurn({data}){
-        console.log(data);
-        const {userId} = data;
-        for (const room of gameRooms) {
-          user1 = room.find(user => user.userId === userId);
-          if (user1) {
-            if(user1.canAttack){
-              user2 = room.find(user => user.userId !== userId);
-              user1.canAttack=false;
-              user2.canAttack=true;
-              user2.GamePoint=user2.GamePoint+1;
-              GR = room
-              const NGR = [user1, user2];
-              gameRooms.pop(GR);
-              gameRooms.push(NGR);
-              const userDataForPlayer1 = { opponent: user2, myDetails: user1 };
-              const userDataForPlayer2 = { opponent: user1, myDetails: user2 };
-              io.to(user1.socketId).emit('resultat_attaque', userDataForPlayer1);
-              io.to(user2.socketId).emit('resultat_attaque', userDataForPlayer2);
-            }else{
-              io.to(user1.socketId).emit('erreur_attaque', 'not your turn' );
+                        attackPlayer = this.updateWallet({player: attackPlayer, amount: this.moneyPrice})
+                        defensePlayer = this.updateWallet({player: defensePlayer, amount: -this.moneyPrice})
+                        
+                        const infoPlayers = {"winner": attackPlayer, "looser": defensePlayer}
+
+                        return infoPlayers;
+                    }
+                    // Enlever un gamePoint au joueur
+                    attackPlayer.gamePoints -= 1;
+                } else {
+                    io.to(attackPlayer.socketId).emit('fail_attack', 'Card invalid');
+                }
+            } else {
+                io.to(attackPlayer.socketId).emit('fail_attack', 'No game points left. Press the button "End turn".');
             }
-          }
+        } else {
+            io.to(attackPlayer.socketId).emit('fail_attack', 'It is not your turn to attack, wait for the end of your opponent turn.');
+
         }
-      };
-    
+    }
+
+
+    // endTurn({ data }) {
+    //     console.log(data);
+    //     const { userId } = data;
+    //     for (const room of gameRooms) {
+    //         user1 = room.find(user => user.userId === userId);
+    //         if (user1) {
+    //             if (user1.canAttack) {
+    //                 user2 = room.find(user => user.userId !== userId);
+    //                 user1.canAttack = false;
+    //                 user2.canAttack = true;
+    //                 user2.GamePoint = user2.GamePoint + 1;
+    //                 GR = room
+    //                 const NGR = [user1, user2];
+    //                 gameRooms.pop(GR);
+    //                 gameRooms.push(NGR);
+    //                 const userDataForPlayer1 = { opponent: user2, myDetails: user1 };
+    //                 const userDataForPlayer2 = { opponent: user1, myDetails: user2 };
+    //                 io.to(user1.socketId).emit('resultat_attaque', userDataForPlayer1);
+    //                 io.to(user2.socketId).emit('resultat_attaque', userDataForPlayer2);
+    //             } else {
+    //                 io.to(user1.socketId).emit('erreur_attaque', 'not your turn');
+    //             }
+    //         }
+    //     }
+    // }
+
+    isEndGame({player}) {
+        return player.cards.every(card => card.hp <=0);
+    }
+
+    updateWallet({player, amount}) {
+        player.wallet += amount;
+        return player;
+    }
 }
 
 function getRandomInt(min, max) {
