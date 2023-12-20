@@ -1,44 +1,111 @@
 import React, { useState, useEffect } from 'react';
-
-// Dummy data for the cards
-const cardsData = [
-  { id: 1, name: 'Card 1', description: 'Description 1', price: '50$' },
-  { id: 2, name: 'Card 2', description: 'Description 2', price: '60$' },
-  // Add more card objects here
-];
-
-const CardItem = ({ card, onBuy }) => (
-  <div className="card-item">
-    <h3>{card.name}</h3>
-    <p>{card.description}</p>
-    <p>{card.price}</p>
-    <button onClick={() => onBuy(card)}>Buy</button>
-  </div>
-);
+import CardItem from '../components/Card/containers/CardItem';
+import { Header } from '../components/Header/Header.jsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { update_user_action } from '../slices/userSlice.js';
 
 const BuyPage = () => {
-  const [cards, setCards] = useState(cardsData);
+  const [cards, setCards] = useState([]);
+  const user = useSelector(state => state.userReducer.user);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    // Here you would fetch the cards from your backend instead of using dummy data
-    // fetch('/api/cards')
-    //   .then(response => response.json())
-    //   .then(data => setCards(data));
-  }, []);
+  const fetchCards = async () => {
+    try {
+      const response = await fetch('/cards_to_sell');
+      if (!response.ok) {
+        throw new Error('Failed to fetch cards');
+      }
+      const cardsData = await response.json();
+      setCards(Object.values(cardsData));
+    } catch (error) {
+      console.error('Error fetching cards:', error.message);
+    }
 
-  const handleBuy = (card) => {
-    // Implement your buy logic here, for example opening a modal or making an API call
-    console.log('Buying', card);
+
   };
 
+  const handleBuy = async (cardId) => {
+    const url = '/buy';
+    const data = {
+      "user_id": user.id,
+      "card_id": cardId
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Server Response:', result);
+      setCards((prevCards) => prevCards.filter((c) => c.id !== cardId));
+
+      const userinfo = await fetch('/user/' + String(data.user_id), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!userinfo.ok) {
+        throw new Error(`Erreur HTTP! Statut : ${userinfo.status}`);
+      }
+
+      const userinfo1 = await userinfo.json();
+      dispatch(update_user_action(userinfo1));
+
+
+    } catch (error) {
+      console.error('Error during buy request:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchCards();
+  }, []); // Empty dependency array ensures that the effect runs once after the initial render
+
   return (
+
     <div className="buy-page">
-      <h1>Market</h1>
-      <div className="card-list">
-        {cards.map((card) => (
-          <CardItem key={card.id} card={card} onBuy={handleBuy} />
-        ))}
-      </div>
+      <Header page={"Buy"}/>
+      <div class="ui grid">
+            <div class="ten wide column">
+                 <h3 class="ui aligned header">Market</h3>
+                <table class="ui selectable celled table" id="cardListId">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Family</th>
+                            <th>HP</th>
+                            <th>Energy</th>
+                            <th>Defence</th>
+                            <th>Attack</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {cards.map((card) => (
+                      <CardItem key={card.id} card={card} onBuy={handleBuy} />
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+            <div class=" five wide column">
+                <div id="card"></div> 
+
+            </div>
+
+        </div>
     </div>
   );
 };

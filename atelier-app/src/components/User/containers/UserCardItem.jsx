@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CardItem = ({ card, onBuy }) => (
+const UserCardItem = ({ card, onSell }) => (
 
   <tr>
     <td>
@@ -15,7 +15,7 @@ const CardItem = ({ card, onBuy }) => (
     <td>{card.price}$</td>
     <td>
         <div class="ui vertical animated button" tabindex="0">
-            <div class="hidden content" onClick={() => onBuy(card.id)}>Buy</div>
+            <div class="hidden content" onClick={() => onSell(card.id)}>Sell</div>
             <div class="visible content">
                 <i class="shop icon"></i>
             </div>
@@ -24,4 +24,4 @@ const CardItem = ({ card, onBuy }) => (
   </tr>
 );
 
-export default CardItem;
+export default UserCardItem;
