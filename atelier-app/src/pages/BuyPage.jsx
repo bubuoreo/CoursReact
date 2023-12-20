@@ -4,32 +4,27 @@ import { Header } from '../components/Header/Header.jsx';
 import { useSelector } from 'react-redux';
 
 const BuyPage = () => {
-  const [cardsWithUserId14, setCardsWithUserId14] = useState([]);
+  const [cards, setCards] = useState([]);
   const user = useSelector(state => state.userReducer.user);
 
   const fetchCards = async () => {
     try {
       const response = await fetch('/cards_to_sell');
       if (!response.ok) {
-        throw new Error('Failed to fetch');
+        throw new Error('Failed to fetch cards');
       }
       const cardsData = await response.json();
-      const cardsFiltered = Object.values(cardsData);
-      setCardsWithUserId14(cardsFiltered);
+      setCards(Object.values(cardsData));
     } catch (error) {
-      console.error('Error fetching cards', error);
+      console.error('Error fetching cards:', error.message);
     }
   };
 
-  useEffect(() => {
-    fetchCards();
-  }, []); // Empty dependency array ensures that the effect runs once after the initial render
-
-  const postData = async (cardId) => {
+  const handleBuy = async (cardId) => {
     const url = '/buy';
     const data = {
-      userId: user.id + 1,
-      id: cardId,
+      "user_id": user.id + 1,
+      "card_id": cardId
     };
 
     try {
@@ -42,27 +37,27 @@ const BuyPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur HTTP! Statut : ${response.status}`);
+        throw new Error(`HTTP Error! Status: ${response.status}`);
       }
 
       const result = await response.json();
-      console.log('Réponse du serveur :', result);
+      console.log('Server Response:', result);
     } catch (error) {
-      console.error('Erreur lors de la requête :', error.message);
+      console.error('Error during buy request:', error.message);
     }
   };
 
-  const handleBuy = (cardId) => {
-    postData(cardId);
-  };
+  useEffect(() => {
+    fetchCards();
+  }, []); // Empty dependency array ensures that the effect runs once after the initial render
 
   return (
     <div className="buy-page">
       <Header page={"Buy"}/>
       <h1>Market</h1>
       <div className="card-list">
-        {cardsWithUserId14.map((card) => (
-          <CardItem key={card.id} card={card} onClick={() => handleBuy(card.id)} />
+        {cards.map((card) => (
+          <CardItem key={card.id} card={card} onBuy={handleBuy} />
         ))}
       </div>
     </div>
