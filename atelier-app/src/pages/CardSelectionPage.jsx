@@ -20,7 +20,7 @@ const CardSelectionPage = () => {
         throw new Error('Failed to fetch');
       }
       const cardsData = await response.json();
-      const cardsFiltered = Object.values(cardsData).filter((card) => card.userId === user.id + 1);
+      const cardsFiltered = Object.values(cardsData).filter((card) => card.userId === user.id);
       setCardsWithUserId(cardsFiltered);
     } catch (error) {
       console.error('Error fetching cards', error);
@@ -36,8 +36,10 @@ const CardSelectionPage = () => {
     const updatedSelectedCards = selectedCards.includes(cardId)
       ? selectedCards.filter((id) => id !== cardId)
       : [...selectedCards, cardId];
+      
 
     setSelectedCards(updatedSelectedCards);
+    console.log('selected');
   };
 
   const getSelectedCardsInfo = () => {
@@ -45,6 +47,8 @@ const CardSelectionPage = () => {
       const card = cardsWithUserId.find((c) => c.id === cardId);
       return {
         id: cardId,
+        name: card?.name,
+        imgUrl: card?.imgUrl,
         att: card?.attack,
         def: card?.defence,
         hp: card?.hp,
@@ -85,11 +89,12 @@ const CardSelectionPage = () => {
 
                     const selectedCardsInfo = getSelectedCardsInfo();
                     console.log('Selected Cards:', selectedCardsInfo);
+                    dispatch(addSelectedCard(selectedCardsInfo));
 
                     // Envoyer les cartes sélectionnées au reducer
-                    selectedCardsInfo.forEach((cardInfo) => {
-                      dispatch(addSelectedCard(cardInfo));
-                    });
+                    // selectedCardsInfo.forEach((cardInfo) => {
+                    //   dispatch(addSelectedCard(cardInfo));
+                    // });
 
                     navigate('/play');
                   }}

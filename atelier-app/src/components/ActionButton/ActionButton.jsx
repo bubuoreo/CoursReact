@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const icons = {
   buy: FaShoppingCart,
   sell: FaDollarSign,
+  selection: FaPlay,
   play: FaPlay
 };
 
