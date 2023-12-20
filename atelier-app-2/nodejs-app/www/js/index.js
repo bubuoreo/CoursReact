@@ -4,6 +4,30 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function messageAlert(msg) {
+    alert(msg);
+}
+
+function displayDetails(data) {
+    const parsedData = JSON.parse(data)
+    
+    var p = document.createElement('p');
+    p.innerText = "myDetails : " + JSON.stringify(parsedData.self);
+    document.getElementById('infoDiv').appendChild(p);
+    
+    var p = document.createElement('p');
+    p.innerText = "opponentDetails : " + JSON.stringify(parsedData.opponent);
+    document.getElementById('infoDiv').appendChild(p);
+}
+
+function displayEndGameDetails(data) {
+    const parsedData = JSON.parse(data)
+
+    var p = document.createElement('p');
+    p.innerText = data;
+    document.getElementById('infoDiv').appendChild(p);
+}
+
 // async function getSpringbootUsers(htmlElem) {
 //     try {
 //         const response = await fetch(`http://localhost:3000/api/users`);
@@ -97,27 +121,17 @@ function load() {
         var p = document.createElement('p');
         p.innerHTML = "opponentDetails : " + JSON.stringify(parsedData.opponentDetails);
         document.getElementById('infoDiv').appendChild(p);
-
-        if (!parsedData.myDetails.canAttack) {
-            document.getElementById('attackButton').disabled = true
-        }
     });
 
-    socket.on('feedback_attack', function (data) {
-        const parsedData = JSON.parse(data)
-        
-        var p = document.createElement('p');
-        p.innerHTML = "myDetails : " + JSON.stringify(parsedData.self);
-        document.getElementById('infoDiv').appendChild(p);
-        
-        var p = document.createElement('p');
-        p.innerHTML = "opponentDetails : " + JSON.stringify(parsedData.opponent);
-        document.getElementById('infoDiv').appendChild(p);
-    })
+    socket.on('feedback_attack', (data) => { displayDetails(data)})
     
-    socket.on('fail_attack', function (msg) {
-        alert(msg);
-    });
+    socket.on('fail_attack',(msg) => { messageAlert(msg)});
+
+    socket.on('fail_endTurn',(msg) => { messageAlert(msg)});
+
+    socket.on('feedback_endTurn', (data) => { displayDetails(data)});
+
+    socket.on('endGame', (data) => { displayEndGameDetails(data)});
     
     socket.on('updateConnectedUsers', (data) => {
         connectedUsersParagraph.innerHTML = `Utilisateurs connectés : ${data}`;

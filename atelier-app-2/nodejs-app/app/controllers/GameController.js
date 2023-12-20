@@ -8,10 +8,11 @@ class GameController {
         this.userManager = new UserManagerClass();
         this.gameService = new GameServiceClass(this.userManager);
         this.springbootService = new SpringbootServiceClass(springbootPath);
+        this.endTurn = this.endTurn.bind(this);
     }
 
     init({ io, socket, idUser }) {
-        console.log(`GameController: ${idUser}`);
+        console.log(`GameController: init: ${idUser}`);
         // Appeler le UserManager pour sauvegarder la socket de l'utilisateur
         this.userManager.addUser({ id: idUser, socket: socket });
         const connectedUsers = Array.from(this.userManager.getConnectedUsers());
@@ -43,13 +44,21 @@ class GameController {
         });
 
         socket.on('attaque', (data) => {
-            console.log("On attaque")
+            console.log("GameController: init: On attaque")
             const { source: cardId, target: opponentCardId } = data;
             const result = this.gameService.attaque({ userId: idUser, cardId: cardId, opponentCardId: opponentCardId });
             if (result !== undefined) {
-                console.log(result);
+                console.log("GameController: init: ");
+                console.log(result[0]);
+                console.log("GameController: init: ");
+                console.log(result[1]);
                 if (result[0] === 'failure') {
                     socket.emit('fail_attack', result[1]);
+                } else if (result[0] === 'success_endTurn') {
+                    this.endTurn({ idUser: idUser, io: io });
+                } else if (result[0] === 'end') {
+                    io.to(result[1].winner.socketId).emit('endGame', JSON.stringify(result[1]));
+                    io.to(result[1].looser.socketId).emit('endGame', JSON.stringify(result[1]));
                 }
                 else {
                     io.to(result[1].infoPlayer1.self.socketId).emit('feedback_attack', JSON.stringify(result[1].infoPlayer1));
@@ -58,18 +67,29 @@ class GameController {
             }
         });
 
-        socket.on('endTurn', () => {
-            console.log("On change de joueur")
-            this.gameService.endTurn();
-        });
+        socket.on('endTurn', () => { endTurn() });
 
         socket.on('getSpringbootUsers', async () => {
             const result = await this.springbootService.getAllUsers()
-            console.log(result);
             socket.emit('updateSpringbootUsers', result)
         });
-
     }
+
+    endTurn({ idUser, io }) {
+        console.log("GameController: endTurn: On change de joueur");
+        const result = this.gameService.endTurn({ userId: idUser });
+        if (result !== undefined) {
+            console.log("GameController: endTurn: ");
+            console.log(result);
+            if (result[0] === 'failure') {
+                socket.emit('fail_endTurn', result[1]);
+            } else {
+                io.to(result[1].infoPlayer1.self.socketId).emit('feedback_endTurn', JSON.stringify(result[1].infoPlayer1));
+                io.to(result[1].infoPlayer2.self.socketId).emit('feedback_endTurn', JSON.stringify(result[1].infoPlayer2));
+            }
+        }
+    };
+
 
     removeUser(idUser) {
         // TODO: enlever le joueur de la waitingList si il y était
