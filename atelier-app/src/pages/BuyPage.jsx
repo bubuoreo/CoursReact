@@ -54,7 +54,7 @@ const BuyPage = () => {
 
   return (
     <div className="buy-page">
-      <Header />
+      <Header page={"Buy"}/>
       <h1>Market</h1>
       <div className="card-list">
         {cards.map((card) => (

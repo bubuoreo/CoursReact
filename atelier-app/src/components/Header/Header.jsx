@@ -2,15 +2,14 @@ import React from 'react';
 import User from '../User/User.jsx';
 import { useSelector } from 'react-redux';
 
-export const Header = () => {
+export const Header = ({ page }) => {
 
   let user = useSelector(state => state.userReducer.user);
 
   return (
 
     <header>
-      <h1 className="text-xl font-bold text-center">My Application</h1>
-      <User name={user.login} email={user.email} balance={user.account} />
+      <User name={user.login} email={user.email} balance={user.account} page={page}/>
     </header>
   );
 };

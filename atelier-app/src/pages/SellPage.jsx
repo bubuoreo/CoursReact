@@ -3,6 +3,7 @@ import { Header } from '../components/Header/Header.jsx';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import UserCardItem from '../components/User/containers/UserCardItem.jsx';
+
 const SellPage = () => {
   const navigate = useNavigate();
   let user = useSelector(state => state.userReducer.user);
@@ -65,14 +66,38 @@ const SellPage = () => {
 
   return (
     <div className="sell-page">
-      <Header />
-      <h1>My Cards</h1>
+      <Header page={"Sell"}/>
+      <div class="ui grid">
+            <div class="ten wide column">
+                 <h3 class="ui aligned header"> My Card List</h3>
+                <table class="ui selectable celled table" id="cardListId">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Family</th>
+                            <th>HP</th>
+                            <th>Energy</th>
+                            <th>Defence</th>
+                            <th>Attack</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {cardsWithUserId14.map((card) => (
+                      <UserCardItem key={card.id} card={card} onSell={handleSell} />
+                    ))}
 
-      <div className="card-list">
-        {cardsWithUserId14.map((card) => (
-          <UserCardItem key={card.id} card={card} onSell={handleSell} />
-        ))}
-      </div>
+                    </tbody>
+                </table>
+            </div>
+            <div class=" five wide column">
+                <div id="card"></div> 
+
+            </div>
+
+        </div>
     </div>
   );
 };
