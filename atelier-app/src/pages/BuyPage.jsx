@@ -42,6 +42,7 @@ const BuyPage = () => {
 
       const result = await response.json();
       console.log('Server Response:', result);
+      setCards((prevCards) => prevCards.filter((c) => c.id !== cardId));
     } catch (error) {
       console.error('Error during buy request:', error.message);
     }
