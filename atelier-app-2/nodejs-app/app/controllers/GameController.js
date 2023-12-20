@@ -64,7 +64,8 @@ class GameController {
         });
 
         socket.on('getSpringbootUsers', async () => {
-            this.springbootService.getAllUsers()
+            const result = this.springbootService.getAllUsers()
+            socket.emit('updateSpringbootUsers', result)
         });
 
     }
@@ -73,10 +74,6 @@ class GameController {
         // TODO: enlever le joueur de la waitingList si il y était
         this.userManager.removeUser(idUser);
     };
-
-    CalculEndGame(user) {
-        return user.cards.every(card => card.defense <= 0);
-    }
 }
 
 module.exports = GameController;

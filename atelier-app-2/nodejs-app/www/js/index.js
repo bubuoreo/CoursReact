@@ -4,25 +4,25 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-async function getSpringbootUsers(htmlElem) {
-    try {
-        const response = await fetch(`http://localhost:3000/api/users`);
-        if (!response.ok) {
-            htmlElem.innerHTML = 'Erreur réseau lors de la requête';
-        } else {
-            var result = await response.json();
-            console.log(result);
+// async function getSpringbootUsers(htmlElem) {
+//     try {
+//         const response = await fetch(`http://localhost:3000/api/users`);
+//         if (!response.ok) {
+//             htmlElem.innerHTML = 'Erreur réseau lors de la requête';
+//         } else {
+//             var result = await response.json();
+//             console.log(result);
 
-            for (const user of result) {
-                const div = document.createElement('div')
-                div.innerText = user.login
-                htmlElem.appendChild(div)
-            }
-        }
-    } catch (error) {
-        htmlElem.innerHTML = 'Erreur lors de la récupération des utilisateurs:' + error;
-    }
-}
+//             for (const user of result) {
+//                 const div = document.createElement('div')
+//                 div.innerText = user.login
+//                 htmlElem.appendChild(div)
+//             }
+//         }
+//     } catch (error) {
+//         htmlElem.innerHTML = 'Erreur lors de la récupération des utilisateurs:' + error;
+//     }
+// }
 
 function load() {
 
@@ -36,7 +36,8 @@ function load() {
     var springbootUsersParagraph = document.getElementById('springbootUsers');
     userParagraph.innerHTML = `User : ${randomNumber}`;
 
-    getSpringbootUsers(springbootUsersParagraph);
+    // getSpringbootUsers(springbootUsersParagraph);
+    socket.emit('getSpringbootUsers');
 
     document.getElementById('playButton').addEventListener('click', () => {
         var cardList = {};
@@ -123,6 +124,6 @@ function load() {
     });
 
     socket.on('updateSpringbootUsers', (data) => {
-        connectedUsersParagraph.innerHTML = `Utilisateurs connectés : ${data}`;
+        springbootUsersParagraph.innerText = `Utilisateurs connectés : ${data}`;
     });
 }
