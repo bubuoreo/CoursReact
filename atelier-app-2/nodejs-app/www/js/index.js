@@ -11,7 +11,13 @@ async function getSpringbootUsers(htmlElem) {
             htmlElem.innerHTML = 'Erreur réseau lors de la requête';
         } else {
             var result = await response.json();
-            htmlElem.innerHTML = result;
+            console.log(result);
+
+            for (const user of result) {
+                const div = document.createElement('div')
+                div.innerText = user.login
+                htmlElem.appendChild(div)
+            }
         }
     } catch (error) {
         htmlElem.innerHTML = 'Erreur lors de la récupération des utilisateurs:' + error;
