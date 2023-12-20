@@ -1,26 +1,27 @@
 import React from 'react';
 
-const CardShort = () => (
-  <div className="ui special cards">
+const CardShort = ({ card, onClick, selected }) => (
+  <div className={`ui special cards ${selected ? 'selected' : ''}`} onClick={onClick}>
     <div className="card">
       <div className="content">
         <div className="ui grid">
           <div className="three column row">
             <div className="column" style={{ textAlign: 'center' }}>
-              <a className="ui red circular label">10</a>
+              <a className="ui red circular label">{card.attack}</a>
             </div>
             <div className="column">
-              <h5>DEADPOOL</h5>
+              <h5>{card.name}</h5>
             </div>
             <div className="column" style={{ textAlign: 'center' }}>
-              <a className="ui yellow circular label">10</a>
+              <a className="ui yellow circular label">{card.defense}</a>
             </div>
           </div>
         </div>
       </div>
       <div className="image imageCard">
         <div className="ui fluid image">
-          <img id="cardImgId" className="ui centered image" src="https://static.hitek.fr/img/actualite/2017/06/27/i_deadpool-2.jpg" alt="Deadpool" />
+          {/* Utilisation des informations de la carte provenant du backend */}
+          <img id="cardImgId" className="ui centered image" src={card.imgUrl} alt={card.name} />
         </div>
       </div>
     </div>
