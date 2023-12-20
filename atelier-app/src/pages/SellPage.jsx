@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from '../components/Header/Header.jsx';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import UserCardItem from '../components/User/containers/UserCardItem.jsx';
+import { update_user_action } from '../slices/userSlice.js';
 
 const SellPage = () => {
   const navigate = useNavigate();
   let user = useSelector(state => state.userReducer.user);
   
   const [cardsWithUserId14, setCardsWithUserId14] = useState([]);
+  const dispatch = useDispatch();
 
   const handleSell = async (cardId) => {
     const url = '/sell';
     const data = {
-      "user_id": user.id + 1,
+      "user_id": user.id,
       "card_id": cardId
     };
-    console.log(data)
+    
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -35,7 +37,23 @@ const SellPage = () => {
   
       // Après la vente de la carte, tu voudras peut-être mettre à jour la liste :
       setCardsWithUserId14((prevCards) => prevCards.filter((c) => c.id !== cardId));
-      navigate('/buy');
+
+      const userinfo = await fetch('/user/' + String(data.user_id), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!userinfo.ok) {
+        throw new Error(`Erreur HTTP! Statut : ${userinfo.status}`);
+      }
+
+      const userinfo1 = await userinfo.json();
+      
+      dispatch(update_user_action(userinfo1));
+      console.log('user3', userinfo1)
+
     } catch (error) {
       console.error('Erreur lors de la requête :', error.message);
     }
@@ -50,7 +68,7 @@ const SellPage = () => {
       }
       const cardsData = await response.json();
       console.log(cardsData)
-      const cardsFiltered = Object.values(cardsData).filter((card) => card.userId === user.id+1);
+      const cardsFiltered = Object.values(cardsData).filter((card) => card.userId === user.id);
       setCardsWithUserId14(cardsFiltered);
       console.log(user.id)
       console.log(cardsFiltered)
