@@ -1,41 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit'
+// cardSlice.js
+import { createSlice } from '@reduxjs/toolkit';
 
 export const cardSlice = createSlice({
-  name: 'Card',
-  // Define initial state of the reducer/slice
+  name: 'card',
   initialState: {
-    card: {
-  "name": "bulbi",
-  "description": "dd",
-  "family": "dd",
-  "affinity": "152",
-  "imgUrl": "http://medias.3dvf.com/news/sitegrab/gits2045.jpg",
-  "smallImgUrl": "https://cdn.animenewsnetwork.com/thumbnails/fit600x1000/cms/feature/89858/05.jpg",
-  "id": 150,
-  "energy": 10,
-  "hp": 58,
-  "defence": 48,
-  "attack": 63,
-  "price": 20,
-  "userId": null
-},
+    selectedCards: {}, // Utiliser un objet pour stocker l'ensemble des cartes sélectionnées
   },
-  // Define the reducers 
   reducers: {
-    update_user_action: (state, action) => {
-        console.log(action)
-        state.user = action.payload
-
+    addSelectedCard: (state, action) => {
+      const { id, att, def, hp, energy } = action.payload;
+      // Ajouter la carte au dictionnaire des cartes sélectionnées
+      state.selectedCards[id] = { att, def, hp, energy };
     },
-    submit_user_action: (state, action) => {
-        console.log("User to Submit");
-        console.log(action.payload.user);
-        state.submitted_user = action.payload.user
+    removeSelectedCard: (state, action) => {
+      const cardIdToRemove = action.payload;
+      // Supprimer la carte du dictionnaire des cartes sélectionnées
+      delete state.selectedCards[cardIdToRemove];
     },
-}
-})
+    clearSelectedCards: (state) => {
+      // Réinitialiser le dictionnaire des cartes sélectionnées
+      state.selectedCards = {};
+    },
+  },
+});
 
-// Action creators are generated for each case reducer function
-export const { update_user_action,submit_user_action } = userSlice.actions
+export const { addSelectedCard, removeSelectedCard, clearSelectedCards } = cardSlice.actions;
 
-export default userSlice.reducer
+export default cardSlice.reducer;

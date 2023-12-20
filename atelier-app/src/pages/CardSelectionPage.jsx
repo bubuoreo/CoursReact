@@ -1,11 +1,16 @@
+// CardSelectionPage.jsx
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import CardShort from '../components/Card/containers/CardShort';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { addSelectedCard, removeSelectedCard, clearSelectedCards } from '../slices/cardSlice';
+
 const CardSelectionPage = () => {
-  const user = useSelector(state => state.userReducer.user);
+  const user = useSelector((state) => state.userReducer.user);
   const [selectedCards, setSelectedCards] = useState([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [cardsWithUserId, setCardsWithUserId] = useState([]);
 
   const fetchCards = async () => {
@@ -27,29 +32,24 @@ const CardSelectionPage = () => {
   }, []);
 
   const handleCardClick = (cardId) => {
-    // Vérifier si la carte est déjà sélectionnée
-    if (selectedCards.includes(cardId)) {
-      // Si oui, la retirer de la sélection
-      setSelectedCards((prevSelected) => prevSelected.filter((id) => id !== cardId));
-    } else {
-      // Sinon, ajouter la carte à la sélection (max 2 cartes)
-      if (selectedCards.length < 4) {
-        setSelectedCards((prevSelected) => [...prevSelected, cardId]);
-      }
-    }
+    // Ajouter ou supprimer la carte du tableau selectedCards
+    const updatedSelectedCards = selectedCards.includes(cardId)
+      ? selectedCards.filter((id) => id !== cardId)
+      : [...selectedCards, cardId];
+
+    setSelectedCards(updatedSelectedCards);
   };
 
   const getSelectedCardsInfo = () => {
-    const selectedCardsInfo = {};
-    cardsWithUserId.forEach((card) => {
-      if (selectedCards.includes(card.id)) {
-        selectedCardsInfo[card.id] = {
-          att: card.attack,
-          def: card.defence,
-          hp: card.hp,
-          energy: card.energy,
-        };
-      }
+    const selectedCardsInfo = selectedCards.map((cardId) => {
+      const card = cardsWithUserId.find((c) => c.id === cardId);
+      return {
+        id: cardId,
+        att: card?.attack,
+        def: card?.defence,
+        hp: card?.hp,
+        energy: card?.energy,
+      };
     });
     return selectedCardsInfo;
   };
@@ -61,7 +61,6 @@ const CardSelectionPage = () => {
           <div className="row">
             <div className="ui grid">
               <div className="two wide column">
-                {/* Utilisez le composant CardShort à la place du div si nécessaire */}
                 {cardsWithUserId.map((card) => (
                   <CardShort
                     key={card.id}
@@ -78,7 +77,22 @@ const CardSelectionPage = () => {
               <div className="four wide column">
                 <button
                   className="huge ui primary button"
-                  onClick={() => console.log('Selected Cards:', getSelectedCardsInfo())}
+                  onClick={() => {
+                    if (selectedCards.length !== 4) {
+                      console.error('Please select exactly 4 cards.');
+                      return;
+                    }
+
+                    const selectedCardsInfo = getSelectedCardsInfo();
+                    console.log('Selected Cards:', selectedCardsInfo);
+
+                    // Envoyer les cartes sélectionnées au reducer
+                    selectedCardsInfo.forEach((cardInfo) => {
+                      dispatch(addSelectedCard(cardInfo));
+                    });
+
+                    navigate('/play');
+                  }}
                 >
                   Valid
                 </button>

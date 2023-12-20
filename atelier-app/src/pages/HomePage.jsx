@@ -10,7 +10,7 @@ const HomePage = () => {
             <div className='d-flex align-items-center justify-content-center mt-5'>
                 <ActionButton action="buy" label="Buy" />
                 <ActionButton action="sell" label="Sell" />
-                <ActionButton action="play" label="Play" />
+                <ActionButton action="selection" label="Play" />
             </div>
         </div>
     );
