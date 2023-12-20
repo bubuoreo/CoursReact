@@ -19,7 +19,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 const springbootService = new SpringbootServiceClass(CONFIG.springbootApp);
-const gameController = new GameControllerClass();
+const gameController = new GameControllerClass(CONFIG.springbootApp);
 
 io.on('connection', (socket) => {
     const idUser = socket.handshake.query.id;

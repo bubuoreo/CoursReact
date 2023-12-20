@@ -4,10 +4,10 @@ const SpringbootServiceClass = require('../services/SpringbootService.js')
 
 class GameController {
 
-    constructor() {
+    constructor(springbootPath) {
         this.userManager = new UserManagerClass();
         this.gameService = new GameServiceClass(this.userManager);
-        this.springbootService = new SpringbootServiceClass();
+        this.springbootService = new SpringbootServiceClass(springbootPath);
     }
 
     init({ io, socket, idUser }) {
@@ -64,7 +64,8 @@ class GameController {
         });
 
         socket.on('getSpringbootUsers', async () => {
-            const result = this.springbootService.getAllUsers()
+            const result = await this.springbootService.getAllUsers()
+            console.log(result);
             socket.emit('updateSpringbootUsers', result)
         });
 

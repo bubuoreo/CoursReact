@@ -33,9 +33,11 @@ class SpringbootService {
                 console.log(result);
                 
                 for (const user of result) {
+                    console.log(user.login)
                     ret += user.login + ', '
                 }
             }
+            console.log(ret)
             return ret;
             
         } catch (error) {
