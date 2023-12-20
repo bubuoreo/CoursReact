@@ -1,18 +1,21 @@
 const UserManagerClass = require("../services/UserManager.js")
 const GameServiceClass = require('../services/GameService.js')
+const SpringbootServiceClass = require('../services/SpringbootService.js')
 
 class GameController {
 
     constructor() {
         this.userManager = new UserManagerClass();
         this.gameService = new GameServiceClass(this.userManager);
+        this.springbootService = new SpringbootServiceClass();
     }
 
     init({ io, socket, idUser }) {
         console.log(`GameController: ${idUser}`);
         // Appeler le UserManager pour sauvegarder la socket de l'utilisateur
         this.userManager.addUser({ id: idUser, socket: socket });
-        this.userManager.getConnectedUsers();
+        const connectedUsers = Array.from(this.userManager.getConnectedUsers());
+        io.emit('updateConnectedUsers', connectedUsers)
         // Déléguer la création de cette écoute a un autre service
         socket.on('chat message', (msg) => {
             var parsedMsg = JSON.parse(msg);
@@ -41,22 +44,33 @@ class GameController {
 
         socket.on('attaque', (data) => {
             console.log("On attaque")
-            const { cardId, opponentCardId } = data;
+            const { source: cardId, target: opponentCardId } = data;
             const result = this.gameService.attaque({ userId: idUser, cardId: cardId, opponentCardId: opponentCardId });
             if (result !== undefined) {
                 console.log(result);
-                // TODO: io.emits()
+                if (result[0] === 'failure') {
+                    socket.emit('fail_attack', result[1]);
+                }
+                else {
+                    io.to(result[1].infoPlayer1.self.socketId).emit('feedback_attack', JSON.stringify(result[1].infoPlayer1));
+                    io.to(result[1].infoPlayer2.self.socketId).emit('feedback_attack', JSON.stringify(result[1].infoPlayer2));
+                }
             }
         });
 
-        socket.on('endturn', (data) => {
+        socket.on('endTurn', () => {
             console.log("On change de joueur")
             this.gameService.endTurn();
+        });
+
+        socket.on('getSpringbootUsers', async () => {
+            this.springbootService.getAllUsers()
         });
 
     }
 
     removeUser(idUser) {
+        // TODO: enlever le joueur de la waitingList si il y était
         this.userManager.removeUser(idUser);
     };
 

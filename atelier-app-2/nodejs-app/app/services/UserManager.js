@@ -23,7 +23,7 @@ class UserManager {
     }
 
     getConnectedUsers() {
-        console.log(this.socketsMap.keys());
+        return this.socketsMap.keys();
     }
 }
 
