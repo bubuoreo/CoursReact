@@ -52,14 +52,39 @@ const BuyPage = () => {
   }, []); // Empty dependency array ensures that the effect runs once after the initial render
 
   return (
+
     <div className="buy-page">
       <Header page={"Buy"}/>
-      <h1>Market</h1>
-      <div className="card-list">
-        {cards.map((card) => (
-          <CardItem key={card.id} card={card} onBuy={handleBuy} />
-        ))}
-      </div>
+      <div class="ui grid">
+            <div class="ten wide column">
+                 <h3 class="ui aligned header">Market</h3>
+                <table class="ui selectable celled table" id="cardListId">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Family</th>
+                            <th>HP</th>
+                            <th>Energy</th>
+                            <th>Defence</th>
+                            <th>Attack</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {cards.map((card) => (
+                      <CardItem key={card.id} card={card} onBuy={handleBuy} />
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+            <div class=" five wide column">
+                <div id="card"></div> 
+
+            </div>
+
+        </div>
     </div>
   );
 };
