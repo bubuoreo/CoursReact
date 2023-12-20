@@ -1,7 +1,13 @@
 import React from 'react';
-import { FaUserCircle } from 'react-icons/fa'; // Make sure to install react-icons
+import { useNavigate } from 'react-router-dom';
 
 const User = ({ name, email, balance, page }) => {
+
+  const navigate = useNavigate();
+
+  const handleHome = async () => {
+    navigate('/home');
+  };
 
   return (
 
@@ -14,7 +20,7 @@ const User = ({ name, email, balance, page }) => {
                 </div>
             </h3>
             <h3 class="ui left floated header">
-                <i class="money icon"></i>
+                <i class="money icon" onClick={handleHome}></i>
                 <div class="content">
                     {page}
                     <div class="sub header">{page} your card to get money</div>

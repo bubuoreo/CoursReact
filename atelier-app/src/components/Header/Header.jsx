@@ -3,7 +3,6 @@ import User from '../User/User.jsx';
 import { useSelector } from 'react-redux';
 
 export const Header = ({ page }) => {
-
   let user = useSelector(state => state.userReducer.user);
 
   return (
