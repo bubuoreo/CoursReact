@@ -59,8 +59,8 @@ class GameController {
                 } else if (result[0] === 'end') {
                     io.to(result[1].winner.socketId).emit('endGame', JSON.stringify(result[1]));
                     io.to(result[1].looser.socketId).emit('endGame', JSON.stringify(result[1]));
-                    this.springbootService.updateUserMoney({userId: result[1].winner.id, newMoney: result[1].winner.wallet});
-                    this.springbootService.updateUserMoney({userId: result[1].looser.id, newMoney: result[1].looser.wallet});
+                    this.springbootService.updateUserMoney({userId: "6", newMoney: result[1].winner.wallet});
+                    //this.springbootService.updateUserMoney({userId: result[1].looser.id, newMoney: result[1].looser.wallet});
                 }
                 else {
                     io.to(result[1].infoPlayer1.self.socketId).emit('feedback_attack', JSON.stringify(result[1].infoPlayer1));

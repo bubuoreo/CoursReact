@@ -33,7 +33,7 @@ class SpringbootService {
 
     async updateUserMoney({ userId, newMoney }) {
         console.log(`On met à jour les porte feuilles des utilisateurs sur le serveur Springboot à l\'URL: ${this.baseUrl}/user/${userId}`);
-        const response = await fetch(this.baseUrl + "/user/" + userId, {
+        const response = await fetch(this.baseUrl + "/user/" + "6", {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
