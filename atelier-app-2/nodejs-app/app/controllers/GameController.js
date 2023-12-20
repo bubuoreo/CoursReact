@@ -67,7 +67,7 @@ class GameController {
             }
         });
 
-        socket.on('endTurn', () => { endTurn() });
+        socket.on('endTurn', () => this.endTurn({ idUser: idUser, io: io }));
 
         socket.on('getSpringbootUsers', async () => {
             const result = await this.springbootService.getAllUsers()
