@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Header } from '../components/Header/Header.jsx';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
 const UserCardItem = ({ card, onSell }) => (
   <div className="card-item">
     <h3>{card.name}</h3>
@@ -78,7 +79,7 @@ const SellPage = () => {
 
   return (
     <div className="sell-page">
-      <Header />
+      <Header page={"Sell"}/>
       <h1>My Cards</h1>
 
       <div className="card-list">
