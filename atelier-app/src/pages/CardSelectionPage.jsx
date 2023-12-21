@@ -20,7 +20,7 @@ const CardSelectionPage = () => {
         throw new Error('Failed to fetch');
       }
       const cardsData = await response.json();
-      const cardsFiltered = Object.values(cardsData).filter((card) => card.userId === user.id + 1);
+      const cardsFiltered = Object.values(cardsData).filter((card) => card.userId === user.id);
       setCardsWithUserId(cardsFiltered);
     } catch (error) {
       console.error('Error fetching cards', error);
@@ -43,6 +43,7 @@ const CardSelectionPage = () => {
   const getSelectedCardsInfo = () => {
     const selectedCardsInfo = selectedCards.map((cardId) => {
       const card = cardsWithUserId.find((c) => c.id === cardId);
+      console.log(cardsWithUserId)
       return {
         id: cardId,
         att: card?.attack,
