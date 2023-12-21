@@ -28,26 +28,6 @@ function displayEndGameDetails(data) {
     document.getElementById('infoDiv').appendChild(p);
 }
 
-// async function getSpringbootUsers(htmlElem) {
-//     try {
-//         const response = await fetch(`http://localhost:3000/api/users`);
-//         if (!response.ok) {
-//             htmlElem.innerHTML = 'Erreur réseau lors de la requête';
-//         } else {
-//             var result = await response.json();
-//             console.log(result);
-
-//             for (const user of result) {
-//                 const div = document.createElement('div')
-//                 div.innerText = user.login
-//                 htmlElem.appendChild(div)
-//             }
-//         }
-//     } catch (error) {
-//         htmlElem.innerHTML = 'Erreur lors de la récupération des utilisateurs:' + error;
-//     }
-// }
-
 function load() {
 
     var randomNumber = getRandomInt(1, 1000);

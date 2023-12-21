@@ -16,7 +16,13 @@ const port = CONFIG.port;
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+// const io = socketIo(server);
 
 const springbootService = new SpringbootServiceClass(CONFIG.springbootApp);
 const gameController = new GameControllerClass(CONFIG.springbootApp);
@@ -25,8 +31,8 @@ io.on('connection', (socket) => {
     const idUser = socket.handshake.query.id;
     console.log(`L'id du user est : ${idUser}`);
     console.log('Un utilisateur s\'est connecté');
-    gameController.init({io, socket, idUser});
-    
+    gameController.init({ io, socket, idUser });
+
 
     socket.on('disconnect', () => {
         console.log('Un utilisateur s\'est déconnecté');
