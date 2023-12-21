@@ -1,25 +1,20 @@
-// cardSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 export const cardSlice = createSlice({
   name: 'card',
   initialState: {
-    selectedCards: {}, // Utiliser un objet pour stocker l'ensemble des cartes sélectionnées
+    selectedCards: [], // Utiliser un tableau pour stocker les cartes sélectionnées
   },
   reducers: {
     addSelectedCard: (state, action) => {
-      const { id, att, def, hp, energy } = action.payload;
-      // Ajouter la carte au dictionnaire des cartes sélectionnées
-      state.selectedCards[id] = { att, def, hp, energy };
+      state.selectedCards = [...state.selectedCards, action.payload];
     },
     removeSelectedCard: (state, action) => {
       const cardIdToRemove = action.payload;
-      // Supprimer la carte du dictionnaire des cartes sélectionnées
-      delete state.selectedCards[cardIdToRemove];
+      state.selectedCards = state.selectedCards.filter((card) => card.id !== cardIdToRemove);
     },
     clearSelectedCards: (state) => {
-      // Réinitialiser le dictionnaire des cartes sélectionnées
-      state.selectedCards = {};
+      state.selectedCards = [];
     },
   },
 });

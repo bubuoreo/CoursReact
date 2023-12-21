@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from '../components/Header/Header.jsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import UserCardItem from '../components/User/containers/UserCardItem.jsx';
 import { update_user_action } from '../slices/userSlice.js';
 
 const SellPage = () => {
-  const navigate = useNavigate();
+
   let user = useSelector(state => state.userReducer.user);
   
   const [cardsWithUserId14, setCardsWithUserId14] = useState([]);
   const dispatch = useDispatch();
-
+  console.log(cardsWithUserId14);
   const handleSell = async (cardId) => {
     const url = '/sell';
     const data = {
