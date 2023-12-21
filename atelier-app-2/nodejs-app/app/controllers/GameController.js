@@ -22,9 +22,11 @@ class GameController {
             var parsedMsg = JSON.parse(msg);
             if (parsedMsg.hasOwnProperty('dest')) {
                 var idDestUser = parsedMsg.dest;
-                var displayMsg = `User${idUser} -> User${idDestUser}: "${parsedMsg.msg}"`;
-                this.userManager.getSocket({ id: idDestUser }).emit('chat message', displayMsg);
-                this.userManager.getSocket({ id: idUser }).emit('chat message', displayMsg);
+                parsedMsg["emit"] = idUser;
+                console.log(parsedMsg);
+                // var displayMsg = `User${idUser} -> User${idDestUser}: "${parsedMsg.msg}"`;
+                // this.userManager.getSocket({ id: idDestUser }).emit('chat message', JSON.stringify(parsedMsg));
+                this.userManager.getSocket({ id: idUser }).emit('chat message', JSON.stringify(parsedMsg));
             } else {
                 var displayMsg = `User${idUser} : "${parsedMsg.msg}"`;
                 io.emit('chat message', displayMsg);

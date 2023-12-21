@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
-
+import MessageBox from './containers/MessageBox.jsx'
 
 const ChatComponent = () => {
   let user = useSelector(state => state.userReducer.user);
   console.log(user.id);
   const [test, setTest] = useState('');
+  const [messageArray, setMessageArray] = useState([]);
   const message = useRef();
   const socket = io('http://localhost:3000', { query: { id: user.id } });
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    var data = {"msg":message.current.value}
+    var data = {"name":user.name, "emit":user.id, "dest": user.id, "msg":message.current.value}
     socket.emit('chat message', JSON.stringify(data));
   };
 
@@ -42,8 +43,9 @@ const ChatComponent = () => {
   //   }
   // });
 
-  socket.on('chat message', function (msg) {
-    setTest(msg);
+  socket.on('chat message', function (data) {
+    setTest(data);
+    setMessageArray(oldArray => [...oldArray, JSON.parse(data)])
     // var item = document.createElement('li');
     // item.textContent = msg;
     // messages.appendChild(item);
@@ -84,21 +86,9 @@ const ChatComponent = () => {
         </div>
       </div>
       <div className="ui segment">
-        <div className="ui raised segment">
-          <a className="ui blue ribbon label">Eric</a>
-          <span> 10:00:01</span>
-          <p>good luck!</p>
-        </div>
-        <div className="ui raised segment">
-          <a className="ui green right ribbon label">Me</a>
-          <span> 10:00:02</span>
-          <p>You gonna die!</p>
-        </div>
-        <div className="ui raised segment">
-          <a className="ui blue ribbon label">Eric</a>
-          <span> 10:00:03</span>
-          <p>Not sure</p>
-        </div>
+        {messageArray.map((msg) => (
+              <MessageBox data={msg}/>
+          ))}
       </div>
       <div className="ui form">
         <div className="field">
