@@ -11,8 +11,8 @@ const ChatComponent = () => {
   const socketRef = useRef(null);
   const message = useRef();
   // const destinataire = useRef(0);
-  const [springbootUsers, setSpringbootUsers] = useState([]);
-  const [lastReceivedMsg, setLastReceivedMsg] = useState('');
+  const broadcastSelection = {"id":-1,"lastName":"Everyone","surName":""}
+  const [springbootUsers, setSpringbootUsers] = useState([broadcastSelection]);
   const [messageArray, setMessageArray] = useState([]);
   const [selectedUserId, setselectedUserId] =useState(null);
 
@@ -42,12 +42,12 @@ const ChatComponent = () => {
   const setSocketsListeners = (socket) => {
     socket.on('chat message', function (data) {
       console.log("message reçu");
-      setLastReceivedMsg(data);
       setMessageArray(oldArray => [...oldArray, JSON.parse(data)]);
     });
 
     socket.on('updateSpringbootUsers', (data) => {
-      setSpringbootUsers(JSON.parse(data));
+      console.log([broadcastSelection, ...(JSON.parse(data))]);
+      setSpringbootUsers([broadcastSelection, ...(JSON.parse(data))]);
     });
   }
 
