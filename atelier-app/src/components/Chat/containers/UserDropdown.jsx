@@ -7,6 +7,7 @@ const UserDropdown = ({ users, onSelectUser }) => {
     onSelectUser(selectedUser);
   };
 
+  console.log({users});
   const userOptions = users.map(user => ({
     key: user.id,
     value: user.id,
