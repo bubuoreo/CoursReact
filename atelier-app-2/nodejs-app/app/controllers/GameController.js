@@ -20,7 +20,7 @@ class GameController {
         // Déléguer la création de cette écoute a un autre service
         socket.on('chat message', (msg) => {
             var parsedMsg = JSON.parse(msg);
-            if (parsedMsg.hasOwnProperty('dest')) {
+            if (parsedMsg.dest !== '-1' ) {
                 var idDestUser = parsedMsg.dest;
                 parsedMsg["emit"] = idUser;
                 console.log(parsedMsg);
@@ -35,8 +35,8 @@ class GameController {
                     console.log(error);
                 }
             } else {
-                var displayMsg = `User${idUser} : "${parsedMsg.msg}"`;
-                io.emit('chat message', displayMsg);
+                parsedMsg["emit"] = idUser;
+                io.emit('chat message', JSON.stringify(parsedMsg));
             }
         });
         socket.on('play', (data) => {

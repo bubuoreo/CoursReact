@@ -11,8 +11,7 @@ const UserDropdown = ({ users, onSelectUser }) => {
   const userOptions = users.map(user => ({
     key: user.id,
     value: user.id,
-    text: `${user.lastName} ${user.surName}`,
-    // ... Autres propriétés de l'option de l'utilisateur
+    text: `${user.lastName} ${user.surName}`
   }));
 
   return (
