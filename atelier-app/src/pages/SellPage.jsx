@@ -84,10 +84,10 @@ const SellPage = () => {
   return (
     <div className="sell-page">
       <Header page={"Sell"}/>
-      <div class="ui grid">
-            <div class="ten wide column">
-                 <h3 class="ui aligned header"> My Card List</h3>
-                <table class="ui selectable celled table" id="cardListId">
+      <div className="ui grid">
+            <div className="ten wide column">
+                 <h3 className="ui aligned header"> My Card List</h3>
+                <table className="ui selectable celled table" id="cardListId">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -109,7 +109,7 @@ const SellPage = () => {
                     </tbody>
                 </table>
             </div>
-            <div class=" five wide column">
+            <div className=" five wide column">
                 <div id="card"></div> 
 
             </div>

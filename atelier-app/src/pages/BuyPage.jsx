@@ -76,10 +76,10 @@ const BuyPage = () => {
 
     <div className="buy-page">
       <Header page={"Buy"}/>
-      <div class="ui grid">
-            <div class="ten wide column">
-                 <h3 class="ui aligned header">Market</h3>
-                <table class="ui selectable celled table" id="cardListId">
+      <div className="ui grid">
+            <div className="ten wide column">
+                 <h3 className="ui aligned header">Market</h3>
+                <table className="ui selectable celled table" id="cardListId">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -100,7 +100,7 @@ const BuyPage = () => {
                     </tbody>
                 </table>
             </div>
-            <div class=" five wide column">
+            <div className=" five wide column">
                 <div id="card"></div> 
 
             </div>

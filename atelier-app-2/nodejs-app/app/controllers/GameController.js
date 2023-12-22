@@ -15,8 +15,8 @@ class GameController {
         console.log(`GameController: init: ${idUser}`);
         // Appeler le UserManager pour sauvegarder la socket de l'utilisateur
         this.userManager.addUser({ id: idUser, socket: socket });
-        const connectedUsers = Array.from(this.userManager.getConnectedUsers());
-        io.emit('updateConnectedUsers', connectedUsers)
+        // const connectedUsers = Array.from(this.userManager.getConnectedUsers());
+        // io.emit('updateConnectedUsers', connectedUsers)
         // Déléguer la création de cette écoute a un autre service
         socket.on('chat message', (msg) => {
             var parsedMsg = JSON.parse(msg);
@@ -24,9 +24,16 @@ class GameController {
                 var idDestUser = parsedMsg.dest;
                 parsedMsg["emit"] = idUser;
                 console.log(parsedMsg);
-                // var displayMsg = `User${idUser} -> User${idDestUser}: "${parsedMsg.msg}"`;
-                // this.userManager.getSocket({ id: idDestUser }).emit('chat message', JSON.stringify(parsedMsg));
-                this.userManager.getSocket({ id: idUser }).emit('chat message', JSON.stringify(parsedMsg));
+                try {
+                    this.userManager.getSocket({ id: idDestUser }).emit('chat message', JSON.stringify(parsedMsg));
+                } catch (error) {
+                    console.log(error);
+                }
+                try {
+                    this.userManager.getSocket({ id: idUser }).emit('chat message', JSON.stringify(parsedMsg));
+                } catch (error) {
+                    console.log(error);
+                }
             } else {
                 var displayMsg = `User${idUser} : "${parsedMsg.msg}"`;
                 io.emit('chat message', displayMsg);
@@ -75,7 +82,7 @@ class GameController {
 
         socket.on('getSpringbootUsers', async () => {
             const result = await this.springbootService.getAllUsers()
-            socket.emit('updateSpringbootUsers', result)
+            socket.emit('updateSpringbootUsers', JSON.stringify(result))
         });
     }
 

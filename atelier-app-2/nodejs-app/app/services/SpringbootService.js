@@ -15,14 +15,8 @@ class SpringbootService {
                 ret += 'Erreur réseau lors de la requête';
             } else {
                 var result = await response.json();
-                console.log(result);
-
-                for (const user of result) {
-                    console.log(user.login)
-                    ret += user.login + ', '
-                }
+                ret = result
             }
-            console.log(ret)
             return ret;
 
         } catch (error) {
@@ -48,7 +42,7 @@ class SpringbootService {
             var result = await response.json();
             console.log(result);
         }
-            
+
     }
 }
 

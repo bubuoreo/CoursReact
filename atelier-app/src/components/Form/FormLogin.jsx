@@ -31,7 +31,7 @@ const FormLogin = ({ onConnect, onCancel }) => {
       const data = await response.json();
       navigate('/home');
 
-      const userinfo = await fetch('/user/' + String(data+1), {
+      const userinfo = await fetch('/user/' + String(data), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
