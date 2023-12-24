@@ -31,7 +31,10 @@ Back-End : Implémentation du Chat
 Back-End : Liaison entre le backend Spring Boot et Node.js pour récupérer la liste des utilisateurs via Web service 
 Back-End : Implémentation du service permettant d’associer des joueurs souhaitant jouer entre eux et  implémentation de la logique de jeu
 
-## [Lien vers le Repo GIT](https://github.com/bubuoreo/CoursReact.git)
+## Lien vers le Repo GIT
+
+- [Fonctionnement du jeu avec le chat en HTML static](https://github.com/bubuoreo/CoursReact/tree/int_chat)
+- [Fonctionnement FrontEnd React avec l'intégration du chat](https://github.com/bubuoreo/CoursReact/tree/chat)
 
 ## Liste des éléments réalisés
 
